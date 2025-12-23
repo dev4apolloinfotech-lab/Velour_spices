@@ -1,0 +1,32 @@
+[26-Nov-2025 11:59:32 UTC] PHP Warning:  require(/home/cnidqf93l906/public_html/../../oro_veda/vendor/autoload.php): Failed to open stream: No such file or directory in /home/cnidqf93l906/public_html/index.php on line 34
+[26-Nov-2025 11:59:32 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/cnidqf93l906/public_html/../../oro_veda/vendor/autoload.php' (include_path='.:/opt/alt/php83/usr/share/pear:/opt/alt/php83/usr/share/php:/usr/share/pear:/usr/share/php') in /home/cnidqf93l906/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/cnidqf93l906/public_html/index.php on line 34
+[26-Nov-2025 12:01:07 UTC] PHP Warning:  require(/home/cnidqf93l906/public_html/../../oro_veda/vendor/autoload.php): Failed to open stream: No such file or directory in /home/cnidqf93l906/public_html/index.php on line 34
+[26-Nov-2025 12:01:07 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/cnidqf93l906/public_html/../../oro_veda/vendor/autoload.php' (include_path='.:/opt/alt/php83/usr/share/pear:/opt/alt/php83/usr/share/php:/usr/share/pear:/usr/share/php') in /home/cnidqf93l906/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/cnidqf93l906/public_html/index.php on line 34
+[26-Nov-2025 12:02:58 UTC] PHP Warning:  require(/home/cnidqf93l906/public_html/../../oro_veda/vendor/autoload.php): Failed to open stream: No such file or directory in /home/cnidqf93l906/public_html/index.php on line 34
+[26-Nov-2025 12:02:58 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/cnidqf93l906/public_html/../../oro_veda/vendor/autoload.php' (include_path='.:/opt/alt/php83/usr/share/pear:/opt/alt/php83/usr/share/php:/usr/share/pear:/usr/share/php') in /home/cnidqf93l906/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/cnidqf93l906/public_html/index.php on line 34
+[26-Nov-2025 12:03:01 UTC] PHP Warning:  require(/home/cnidqf93l906/public_html/../../oro_veda/vendor/autoload.php): Failed to open stream: No such file or directory in /home/cnidqf93l906/public_html/index.php on line 34
+[26-Nov-2025 12:03:01 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/cnidqf93l906/public_html/../../oro_veda/vendor/autoload.php' (include_path='.:/opt/alt/php83/usr/share/pear:/opt/alt/php83/usr/share/php:/usr/share/pear:/usr/share/php') in /home/cnidqf93l906/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/cnidqf93l906/public_html/index.php on line 34
+[26-Nov-2025 12:04:09 UTC] PHP Warning:  require_once(/home/cnidqf93l906/public_html/../../oro_veda/bootstrap/app.php): Failed to open stream: No such file or directory in /home/cnidqf93l906/public_html/index.php on line 47
+[26-Nov-2025 12:04:09 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/cnidqf93l906/public_html/../../oro_veda/bootstrap/app.php' (include_path='.:/opt/alt/php83/usr/share/pear:/opt/alt/php83/usr/share/php:/usr/share/pear:/usr/share/php') in /home/cnidqf93l906/public_html/index.php:47
+Stack trace:
+#0 {main}
+  thrown in /home/cnidqf93l906/public_html/index.php on line 47
+[26-Nov-2025 12:15:28 UTC] PHP Warning:  require(/home/cnidqf93l906/public_html/oro_veda/vendor/autoload.php): Failed to open stream: No such file or directory in /home/cnidqf93l906/public_html/index.php on line 34
+[26-Nov-2025 12:15:28 UTC] PHP Fatal error:  Uncaught Error: Failed opening required '/home/cnidqf93l906/public_html/oro_veda/vendor/autoload.php' (include_path='.:/opt/alt/php83/usr/share/pear:/opt/alt/php83/usr/share/php:/usr/share/pear:/usr/share/php') in /home/cnidqf93l906/public_html/index.php:34
+Stack trace:
+#0 {main}
+  thrown in /home/cnidqf93l906/public_html/index.php on line 34
+[26-Nov-2025 18:21:35 Asia/Kolkata] PHP Fatal error:  Cannot use Intervention\Image\Facades\Image as Image because the name is already in use in /home/cnidqf93l906/oro_veda/app/Http/Controllers/BlogController.php on line 14
+[17-Dec-2025 19:19:11 Asia/Kolkata] PHP Fatal error:  Cannot use Illuminate\Support\Facades\DB as DB because the name is already in use in /home/cnidqf93l906/oro_veda/app/Http/Controllers/RazorpayController.php on line 26
