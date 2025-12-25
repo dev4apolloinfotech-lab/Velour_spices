@@ -148,7 +148,7 @@
                                                             .replace(/^(\.)/,'0.')         // '.5' -> '0.5'
                                                           "
                                                         maxlength="5" name="usd_rate" autocomplete="off"
-                                                        value="{{ $product->usd_rate }}" required>
+                                                        value="{{ $product->usd_rate }}">
                                                     @error('usd_rate')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -166,7 +166,7 @@
                                                                 .replace(/^(\.)/,'0.')         // '.5' -> '0.5'
                                                               "
                                                         maxlength="5" name="usd_cut_price" autocomplete="off"
-                                                        value="{{ $product->usd_cut_price }}" required>
+                                                        value="{{ $product->usd_cut_price }}">
                                                     @error('usd_cut_price')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -179,7 +179,7 @@
                                                     <input type="text" class="form-control" placeholder="Enter Height"
                                                         oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
                                                         maxlength="5" name="height" autocomplete="off"
-                                                        value="{{ $product->height }}" required>
+                                                        value="{{ $product->height }}">
                                                     @error('height')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -192,7 +192,7 @@
                                                     <input type="text" class="form-control" placeholder="Enter Width"
                                                         oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
                                                         maxlength="5" name="width" autocomplete="off"
-                                                        value="{{ $product->width }}" required>
+                                                        value="{{ $product->width }}">
                                                     @error('width')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -205,7 +205,7 @@
                                                     <input type="text" class="form-control" placeholder="Enter Breath"
                                                         oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
                                                         maxlength="5" name="breath" autocomplete="off"
-                                                        value="{{ $product->breath }}" required>
+                                                        value="{{ $product->breath }}">
                                                     @error('breath')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror
@@ -217,7 +217,7 @@
                                                     <input type="text" class="form-control" placeholder="Enter Weight"
                                                         oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
                                                         maxlength="5" name="weight" autocomplete="off"
-                                                        value="{{ intval($product->weight) }}" required>
+                                                        value="{{ intval($product->weight) }}">
                                                     @error('weight')
                                                         <span class="text-danger">{{ $message }}</span>
                                                     @enderror

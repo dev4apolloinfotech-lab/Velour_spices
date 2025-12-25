@@ -417,7 +417,10 @@ Route::get('shiprocket/status/{id?}', [RazorpayController::class, 'shiprocket_st
 
 
 //product listing
-Route::get('/{categoryid?}', [FrontController::class, 'product_list'])->name('front.product_list');
+Route::get('/products-list', [FrontController::class, 'product_list'])->name('front.product_list');
+
+// Route::get('/{categoryid?}', [FrontController::class, 'product_list'])->name('front.product_list');
+
 //product detail
 Route::get('/product/{category_id?}/{product_id?}', [FrontController::class, 'product_detail'])->name('front.product_detail');
 

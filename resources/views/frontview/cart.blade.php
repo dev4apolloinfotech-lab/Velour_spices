@@ -2,181 +2,157 @@
 @section('title', 'Cart')
 @section('content')
 
-    @include('common.frontmodalalert')
+    {{--  @include('common.frontmodalalert')  --}}
 
-    <section class="page-header" style="background: linear-gradient(135deg, #2a7d3e, #8bc34a)">
-        <div class="header-overlay"></div>
-        <div class="header-content">
-            <h1>Cart</h1>
-            <nav class="bredcrum">
-                <ul>
-                    <li><a href="{{ route('front.index') }}">Home</a></li>
-                    <li>Cart</li>
-                </ul>
-            </nav>
+    <!-- breadcrumb -->
+    <section class="breadcrumb-aromatic d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="page-title mb-3 reveal">Cart</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center mb-0">
+                            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                            <!-- <li class="breadcrumb-item"><a href="#">Shop</a></li> -->
+                            <li class="breadcrumb-item active " aria-current="page">Cart</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
         </div>
     </section>
 
-    @if (\Cart::isEmpty())
-        <div class="col-lg-12 text-center py-5">
-            <img src="{{ asset('assets/front/images/no-product.gif') }}" alt="No Products"
-                style="max-width: 300px; margin-top: 20px;"> <br>
-            <a href="{{ route('front.index') }}" class="btn-primary-2025">Back to Home</a>
-        </div>
-    @else
-        <section class="py-5">
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-8">
-                        <div class="wrap-table-shopping-cart">
-                            <table class="table-shopping-cart"
-                                style="border: 1px solid var(--primary-green); border-radius:none">
-                                <tr class="table_head">
-                                    <th class="column-1">Product</th>
-                                    <th class="column-2"></th>
-                                    <th class="column-3">Price</th>
-                                    <th class="column-4">Quantity</th>
-                                    <th class="column-5">Total</th>
-                                    <th width="10%" class="column-6">Actions</th>
+    <section class="cart-section py-5">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-8 mb-4">
+                    <div class="table-responsive">
+                        <table class="table cart-table align-middle">
+                            <thead>
+                                <tr>
+                                    <th scope="col" class="ps-4">Product</th>
+                                    <th scope="col">Price</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Total</th>
+                                    <th scope="col" class="text-end pe-4">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            <div class="cart-img-wrapper">
+                                                <img src="{{ asset('assets/front/assets/image/chilli-powder.webp') }}"
+                                                    alt="Chilli Powder">
+                                            </div>
+                                            <div class="ms-3">
+                                                <h6 class="text-white mb-0 serif-font">Kashmiri Red Chilli</h6>
+                                                <span class=" small">Pack: 250g</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-gold">₹ 450</td>
+                                    <td>
+                                        <div class="input-group qty-group">
+                                            <button class="btn btn-qty" type="button"><i class="fas fa-minus"></i></button>
+                                            <input type="text" class="form-control qty-input" value="1" readonly>
+                                            <button class="btn btn-qty" type="button"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </td>
+                                    <td class="text-white fw-bold">₹ 450</td>
+                                    <td class="text-end pe-4">
+                                        <a href="#" class="btn text-danger btn-delete"><i
+                                                class="fas fa-trash-alt"></i></a>
+                                    </td>
                                 </tr>
 
-                                @php
-                                    if ($countryCode === 'IN') {
-                                        $symbol = '₹';
-                                    } else {
-                                        $symbol = '$';
-                                    }
-                                @endphp
-
-                                @foreach ($cartItems as $item)
-                                    <tr class="table_row" style="border-bottom: 1px solid var(--primary-green)">
-                                        <td class="column-1">
-                                            <div class="how-itemcart1">
-                                                <img src="{{ asset('uploads/product') . '/' . $item->attributes->image }}"
-                                                    alt="{{ $item->name }}">
-                                            </div>
-                                        </td>
-                                        <td class="column-2">{{ $item->name }}</td>
-                                        <td class="column-3">
-                                            {{ $symbol }}{{ $item->price . ' (' . $item->attribute_text . ')' }}
-                                        </td>
-                                        <td class="column-4">
-
-                                            <div class="quantity-control">
-                                                <button onclick="decreaseCount(this, {{ $item->id }})"
-                                                    class="qty-btn">−</button>
-                                                <input class="qty-input" type="number" readonly name="quantity"
-                                                    data-price="{{ $item->price }}" data-symbol="{{ $symbol }}"
-                                                    id="quantity_{{ $item->id }}" value="{{ $item->quantity }}">
-                                                <button onclick="increaseCount(this, {{ $item->id }})"
-                                                    class="qty-btn">+</button>
-                                            </div>
-
-                                        </td>
-                                        <td class="column-5" id="total_{{ $item->id }}">
-                                            {{ $symbol }}{{ $item->price * $item->quantity }}
-                                        </td>
-                                        <td class="column-6">
-                                            <form action="{{ route('cart.remove') }}" method="post"
-                                                onsubmit="return confirm('Are you sure you want to remove this item?');">
-                                                @csrf
-                                                <input type="hidden" name="id" value="{{ $item->id }}">
-                                                <button type="submit" class="btn-delete">
-                                                    <i class="fa fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </td>
-                                    </tr>
-                                @endforeach
-
-                            </table>
-                        </div>
-                    </div>
-
-                    <div class="col-lg-4">
-
-                        <form class="mb-30" action="{{ route('couponcodeapply') }}" method="post">
-                            @csrf
-                            <input type="hidden" name="totalAmount" value="{{ \Cart::getTotal() }}">
-                            <div class="input-group">
-                                <input type="text" name="coupon" class="form-control" placeholder="Coupon Code" required
-                                    autocomplete="off">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn-primary-2025">Apply Coupon</button>
-                                </div>
-                            </div>
-                        </form>
-
-                        <h3 class=" position-relative text-uppercase my-3 mt-5"><span class=" pr-3">Cart
-                                Summary</span></h3>
-                        <div class="bg-light p-30 ">
-                            <div class=" ">
-                                <div class="d-flex justify-content-between  cart-total-value">
-                                    <h6>Subtotal</h6>
-                                    <h6 style="margin-right: 15px;" id="subtotal">
-                                        {{ $symbol }}{{ \Cart::getSubTotal() }}</h6>
-                                </div>
-                                @if (Session::has('discount'))
-                                    <div class="d-flex justify-content-between align-items-center mb-3">
-                                        <div>
-                                            <h6 class="mb-0">
-                                                Coupon <span class="badge badge-pill badge-success btn-primary-2025">
-                                                    {{ Session::get('applied_coupon_code') }}
-                                                </span>
-                                            </h6>
-                                        </div>
-
+                                <tr>
+                                    <td class="ps-4">
                                         <div class="d-flex align-items-center">
-                                            <h6 class="mb-0 mr-2 text-danger">-
-                                                {{ $symbol }}{{ Session::get('discount') }}</h6>
-                                            <form action="{{ route('couponcoderemove') }}" method="post">
-                                                @csrf
-                                                <button type="submit"
-                                                    class="btn btn-sm btn-outline-danger rounded-circle p-1"
-                                                    title="Remove Coupon">
-                                                    <i class="fa fa-times"></i>
-                                                </button>
-                                            </form>
+                                            <div class="cart-img-wrapper">
+                                                <img src="{{ asset('assets/front/assets/image/corriander-powder.webp') }}"
+                                                    alt="Turmeric">
+                                            </div>
+                                            <div class="ms-3">
+                                                <h6 class="text-white mb-0 serif-font">Organic Turmeric</h6>
+                                                <span class=" small">Pack: 500g</span>
+                                            </div>
                                         </div>
-                                    </div>
-                                @endif
-
-
-                            </div>
-                            <div class="">
-                                <div class="d-flex justify-content-between  cart-total-value">
-
-
-                                    <h5>Total</h5>
-                                    @php
-                                        $subtotal = \Cart::getSubTotal();
-                                        $discount = Session::get('discount', 0);
-                                        $total = $subtotal - $discount;
-                                    @endphp
-                                    <h5 style="margin-right: 15px;" id="total">{{ $symbol }}{{ $total }}
-                                    </h5>
-                                </div>
-
-                            </div>
-                        </div>
+                                    </td>
+                                    <td class="text-gold">₹ 320</td>
+                                    <td>
+                                        <div class="input-group qty-group">
+                                            <button class="btn btn-qty" type="button"><i class="fas fa-minus"></i></button>
+                                            <input type="text" class="form-control qty-input" value="2" readonly>
+                                            <button class="btn btn-qty" type="button"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </td>
+                                    <td class="text-white fw-bold">₹ 640</td>
+                                    <td class="text-end pe-4">
+                                        <a href="#" class="btn text-danger btn-delete"><i
+                                                class="fas fa-trash-alt"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
 
-                    <div class="row mt-4">
-                        <div class="col-12 text-end">
-                            <a href="{{ route('front.checkout') }}" class="btn-primary-2025">Proceed to Checkout</a>
-                        </div>
+                    <div class="mt-4">
+                        <a href="product-list.html" class="text-decoration-none text-white hover-gold">
+                            <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+                        </a>
                     </div>
                 </div>
+
+                <div class="col-lg-4">
+                    <div class="cart-summary-card">
+
+                        <div class="mb-4">
+                            <div class="input-group">
+                                <input type="text" class="form-control coupon-input" placeholder="Coupon Code">
+                                <button class="btn btn-coupon" type="button">Apply</button>
+                            </div>
+                        </div>
+
+                        <h4 class="serif-font text-white mb-4">Cart Summary</h4>
+
+                        <div class="d-flex justify-content-between mb-3 border-bottom border-secondary pb-3">
+                            <span class="">Subtotal</span>
+                            <span class="text-white">₹ 1090.00</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-3 border-bottom border-secondary pb-3">
+                            <span class="">Shipping</span>
+                            <span class="text-success">Free</span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="text-gold fs-5 fw-bold">Total</span>
+                            <span class="text-gold fs-5 fw-bold">₹ 1090.00</span>
+                        </div>
+
+                        <a href="{{ route('front.checkout') }}" class="btn btn-checkout w-100">
+                            Proceed to Checkout
+                        </a>
+
+                        <div class="mt-3 text-center">
+                            <p class="small  mb-0"><i class="fas fa-lock me-1"></i> Secure Checkout</p>
+                        </div>
+
+                    </div>
+                </div>
+
             </div>
-        </section>
-    @endif
+        </div>
+    </section>
 
 
 @endsection
 
 @section('scripts')
 
-    <script>
+    {{--  <script>
         function increaseCount(a, itemId) {
             var input = document.getElementById('quantity_' + itemId);
             var value = parseInt(input.value, 10);
@@ -237,6 +213,6 @@
                     }
                 });
         }
-    </script>
+    </script>  --}}
 
 @endsection

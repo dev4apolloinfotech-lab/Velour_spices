@@ -22,6 +22,56 @@
 @section('content')
 
     {{--  @include('common.frontmodalalert')  --}}
+    <header id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+        <div class="carousel-indicators justify-content-start ps-5 mb-5" style="margin-left: 3%;">
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="2"></button>
+        </div>
+
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="carousel-img-overlay"></div>
+                <img src="{{ asset('assets/front/assets/image/banner-1.webp') }}" class="d-block w-100 hero-img"
+                    alt="Red Spices">
+
+                <div class="carousel-caption">
+                    <p class="hero-sub-text text-red" style="border-color: var(--primary-red)">Est. 1985</p>
+                    <h1 class="hero-big-text">Fiery <span class="serif-font fst-italic text-red">Passion</span></h1>
+                    <p class="hero-desc">Experience the authentic heat of hand-picked Kashmiri Chilies. Sun-dried to
+                        perfection.</p>
+                    <a href="#" class="btn-red-glow">Explore Collection</a>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <div class="carousel-img-overlay"></div>
+                <img src="{{ asset('assets/front/assets/image/banner-2.webp') }}" class="d-block w-100 hero-img"
+                    alt="Turmeric">
+
+                <div class="carousel-caption">
+                    <p class="hero-sub-text text-gold" style="border-color: var(--accent-gold)">Pure Gold</p>
+                    <h1 class="hero-big-text">Golden <span class="serif-font fst-italic text-gold">Roots</span></h1>
+                    <p class="hero-desc">Healing turmeric with high curcumin content for your health.</p>
+                    <a href="#" class="btn-red-glow" style="background: var(--accent-gold); color: black;">View
+                        Turmeric</a>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <div class="carousel-img-overlay"></div>
+                <img src="{{ asset('assets/front/assets/image/banner-3.webp') }}" class="d-block w-100 hero-img"
+                    alt="Spices">
+
+                <div class="carousel-caption">
+                    <p class="hero-sub-text text-white" style="border-color: white">The Blend</p>
+                    <h1 class="hero-big-text">Secret <span class="serif-font fst-italic text-red">Alchemy</span></h1>
+                    <p class="hero-desc">Ancient recipes passed down through generations.</p>
+                    <a href="#" class="btn-red-glow">Discover Blends</a>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <section class="container py-3 my-3">
         <div class="text-center mb-5 reveal">
@@ -77,8 +127,8 @@
                             type="button" role="tab">Spices</button>
                     </li>
                     <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-herbs-tab" data-bs-toggle="pill" data-bs-target="#pills-herbs"
-                            type="button" role="tab">Herbs</button>
+                        <button class="nav-link" id="pills-herbs-tab" data-bs-toggle="pill"
+                            data-bs-target="#pills-herbs" type="button" role="tab">Herbs</button>
                     </li>
 
                 </ul>
@@ -632,34 +682,34 @@
 
     <!-- cta section -->
     <!--<section class="container mb-5 reveal">
-                        <div class="position-relative p-4 p-lg-5 text-center"
-                            style="background: linear-gradient(135deg, #1a0505 0%, #000 100%); border: 1px solid rgba(211, 47, 47, 0.2);">
+                            <div class="position-relative p-4 p-lg-5 text-center"
+                                style="background: linear-gradient(135deg, #1a0505 0%, #000 100%); border: 1px solid rgba(211, 47, 47, 0.2);">
 
-                            <div
-                                style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; background: var(--primary-red); filter: blur(100px); opacity: 0.2; pointer-events: none;">
-                            </div>
+                                <div
+                                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; background: var(--primary-red); filter: blur(100px); opacity: 0.2; pointer-events: none;">
+                                </div>
 
-                            <div class="position-relative z-1">
-                                <h2 class="serif-font mb-3">Join the <span class="text-red">Spice Club</span></h2>
+                                <div class="position-relative z-1">
+                                    <h2 class="serif-font mb-3">Join the <span class="text-red">Spice Club</span></h2>
 
-                                <p class="mb-4 " style="max-width: 500px; margin: 0 auto;">
-                                    Unlock secret recipes, early access to new harvests, and get <span class="text-red">10%
-                                        OFF</span> your first order.
-                                </p>
+                                    <p class="mb-4 " style="max-width: 500px; margin: 0 auto;">
+                                        Unlock secret recipes, early access to new harvests, and get <span class="text-red">10%
+                                            OFF</span> your first order.
+                                    </p>
 
-                                <div class="row justify-content-center">
-                                    <div class="col-12 col-md-8 col-lg-6">
-                                        <div class="input-group">
-                                            <input type="email" class="form-control bg-dark border-secondary text-white py-3"
-                                                placeholder="Enter your email address" style="border-radius: 0;">
-                                            <button class="btn bg-red rounded-0 px-3 px-md-4 fw-bold" type="button">SUBSCRIBE</button>
+                                    <div class="row justify-content-center">
+                                        <div class="col-12 col-md-8 col-lg-6">
+                                            <div class="input-group">
+                                                <input type="email" class="form-control bg-dark border-secondary text-white py-3"
+                                                    placeholder="Enter your email address" style="border-radius: 0;">
+                                                <button class="btn bg-red rounded-0 px-3 px-md-4 fw-bold" type="button">SUBSCRIBE</button>
+                                            </div>
+                                            <p class=" mt-3" style="font-size: 0.7rem;">We respect your inbox. No spam, ever.</p>
                                         </div>
-                                        <p class=" mt-3" style="font-size: 0.7rem;">We respect your inbox. No spam, ever.</p>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </section> -->
+                        </section> -->
 
 
 

@@ -153,16 +153,16 @@ class FrontController extends Controller
 
     public function about(Request $request)
     {
-        try {
-            $meta = MetaData::where('id', '=', '2')->first();
+        // try {
+        $meta = MetaData::where('id', '=', '2')->first();
 
-            return view('frontview.about', compact('meta'));
-        } catch (\Throwable $th) {
-            Log::error('About Page Error: ' . $th->getMessage(), [
-                'exception' => $th
-            ]);
-            return redirect()->back()->withInput()->with('error', 'Failed to load about page.');
-        }
+        return view('frontview.about', compact('meta'));
+        // } catch (\Throwable $th) {
+        //     Log::error('About Page Error: ' . $th->getMessage(), [
+        //         'exception' => $th
+        //     ]);
+        //     return redirect()->back()->withInput()->with('error', 'Failed to load about page.');
+        // }
     }
 
     public function blog(Request $request)
@@ -209,99 +209,122 @@ class FrontController extends Controller
 
         return view('frontview.blog_detail', compact('Blog', 'RecentBlog'));
     }
-
-    public function product_list(Request $request, $categoryid)
+    public function product_list(Request $request)
     {
 
-        try {
-            $meta = MetaData::where('id', '=', '5')->first();
+        // try {
+        $meta = MetaData::where('id', '=', '5')->first();
 
-            $Category = Category::orderBy('id', 'desc')->where(['isDelete' => 0, 'slugname' => $categoryid])->first();
 
-            if (!$Category) {
-                abort(404); // better than redirect back for wrong slugs
-            }
 
-            $limit = $request->input('limit',  16);
-            $filter = $request->input('filter');
+        return view('frontview.products', compact('meta'));
+        // } catch (\Throwable $th) {
+        //     if ($th instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+        //         abort(404);
+        //     }
 
-            $ip = $request->ip();
-            $countryCode = $this->getCountryCode($ip);
+        //     Log::error('Product List Page Error: ' . $th->getMessage(), [
+        //         'slug' => $categoryid,
+        //         'request' => $request->all(),
+        //         'exception' => $th
+        //     ]);
 
-            $products = Product::select(
-                'products.id',
-                'products.categoryId',
-                'products.productname',
-                'products.description',
-                'products.slugname',
-                'products.rate',
-                'products.usd_rate',
-                'products.cut_price',
-                'products.usd_cut_price',
-                DB::raw('(SELECT strphoto FROM productphotos WHERE  productphotos.productid=products.id ORDER BY products.id LIMIT 1) as photo'),
-
-                DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
-
-                // ✅ Select full product attribute details from the same lowest-price row
-                DB::raw('(SELECT pa.id
-              FROM product_attributes pa
-              WHERE pa.product_id = products.id
-              ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
-              LIMIT 1) AS attribute_id'),
-
-                DB::raw('(SELECT pa.product_attribute_qty
-              FROM product_attributes pa
-              WHERE pa.product_id = products.id
-              ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
-              LIMIT 1) AS product_attribute_qty'),
-
-                DB::raw('(SELECT a.name
-              FROM attributes a
-              JOIN product_attributes pa2 ON pa2.product_attribute_id = a.id
-              WHERE pa2.product_id = products.id
-              ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
-              LIMIT 1) AS attribute_name'),
-
-                DB::raw('(SELECT pa3.product_attribute_price
-              FROM product_attributes pa3
-              WHERE pa3.product_id = products.id
-              ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
-              LIMIT 1) AS product_attribute_price')
-            )
-                ->join('categories', 'products.categoryId', '=', 'categories.id')
-                ->where('categories.slugname', $categoryid)
-                ->where(['products.iStatus' => 1, 'products.isDelete' => 0]);
-
-            // ✅ Apply filter if provided
-            if ($filter == 'bestsellers') {
-                $products->where('products.isBestSeller', 1);
-            } elseif ($filter == 'newarrivals') {
-                $products->where('products.isNewArrival', 1);
-            } elseif ($filter == 'giftboxes') {
-                $products->where('products.isGiftBoxes', 1);
-            } elseif ($filter == 'combopacks') {
-                $products->where('products.isComboPacks', 1);
-            }
-
-            // Apply pagination with dynamic limit
-            $products = $products->paginate($limit)->appends($request->all());
-            // dd($products);
-
-            return view('frontview.products', compact('meta', 'products', 'Category', 'categoryid', 'countryCode', 'filter'));
-        } catch (\Throwable $th) {
-            if ($th instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-                abort(404);
-            }
-
-            Log::error('Product List Page Error: ' . $th->getMessage(), [
-                'slug' => $categoryid,
-                'request' => $request->all(),
-                'exception' => $th
-            ]);
-
-            return redirect()->back()->withInput()->with('error', 'Something went wrong while loading the product list.');
-        }
+        //     return redirect()->back()->withInput()->with('error', 'Something went wrong while loading the product list.');
+        // }
     }
+
+    // public function product_list(Request $request, $categoryid)
+    // {
+
+    //     // try {
+    //         $meta = MetaData::where('id', '=', '5')->first();
+
+    //         $Category = Category::orderBy('id', 'desc')->where(['isDelete' => 0, 'slugname' => $categoryid])->first();
+
+    //         if (!$Category) {
+    //             abort(404); // better than redirect back for wrong slugs
+    //         }
+
+    //         $limit = $request->input('limit',  16);
+    //         $filter = $request->input('filter');
+
+    //         $ip = $request->ip();
+    //         $countryCode = $this->getCountryCode($ip);
+
+    //         $products = Product::select(
+    //             'products.id',
+    //             'products.categoryId',
+    //             'products.productname',
+    //             'products.description',
+    //             'products.slugname',
+    //             'products.rate',
+    //             'products.usd_rate',
+    //             'products.cut_price',
+    //             'products.usd_cut_price',
+    //             DB::raw('(SELECT strphoto FROM productphotos WHERE  productphotos.productid=products.id ORDER BY products.id LIMIT 1) as photo'),
+
+    //             DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
+
+    //             // ✅ Select full product attribute details from the same lowest-price row
+    //             DB::raw('(SELECT pa.id
+    //           FROM product_attributes pa
+    //           WHERE pa.product_id = products.id
+    //           ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+    //           LIMIT 1) AS attribute_id'),
+
+    //             DB::raw('(SELECT pa.product_attribute_qty
+    //           FROM product_attributes pa
+    //           WHERE pa.product_id = products.id
+    //           ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+    //           LIMIT 1) AS product_attribute_qty'),
+
+    //             DB::raw('(SELECT a.name
+    //           FROM attributes a
+    //           JOIN product_attributes pa2 ON pa2.product_attribute_id = a.id
+    //           WHERE pa2.product_id = products.id
+    //           ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
+    //           LIMIT 1) AS attribute_name'),
+
+    //             DB::raw('(SELECT pa3.product_attribute_price
+    //           FROM product_attributes pa3
+    //           WHERE pa3.product_id = products.id
+    //           ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
+    //           LIMIT 1) AS product_attribute_price')
+    //         )
+    //             ->join('categories', 'products.categoryId', '=', 'categories.id')
+    //             ->where('categories.slugname', $categoryid)
+    //             ->where(['products.iStatus' => 1, 'products.isDelete' => 0]);
+
+    //         // ✅ Apply filter if provided
+    //         if ($filter == 'bestsellers') {
+    //             $products->where('products.isBestSeller', 1);
+    //         } elseif ($filter == 'newarrivals') {
+    //             $products->where('products.isNewArrival', 1);
+    //         } elseif ($filter == 'giftboxes') {
+    //             $products->where('products.isGiftBoxes', 1);
+    //         } elseif ($filter == 'combopacks') {
+    //             $products->where('products.isComboPacks', 1);
+    //         }
+
+    //         // Apply pagination with dynamic limit
+    //         $products = $products->paginate($limit)->appends($request->all());
+    //         // dd($products);
+
+    //         return view('frontview.products', compact('meta', 'products', 'Category', 'categoryid', 'countryCode', 'filter'));
+    //     // } catch (\Throwable $th) {
+    //     //     if ($th instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+    //     //         abort(404);
+    //     //     }
+
+    //     //     Log::error('Product List Page Error: ' . $th->getMessage(), [
+    //     //         'slug' => $categoryid,
+    //     //         'request' => $request->all(),
+    //     //         'exception' => $th
+    //     //     ]);
+
+    //     //     return redirect()->back()->withInput()->with('error', 'Something went wrong while loading the product list.');
+    //     // }
+    // }
 
     public function product_detail(Request $request, $category_id = null, $product_id = null)
     {
@@ -551,30 +574,30 @@ class FrontController extends Controller
 
     public function checkout(Request $request)
     {
-        try {
-            $Coupon = $request->session()->get('data');
-            $cartItems = \Cart::getContent();
+        // try {
+        $Coupon = $request->session()->get('data');
+        $cartItems = \Cart::getContent();
 
-            if ($cartItems->isEmpty()) {
-                return redirect()->route('front.index')->with('error', 'Your cart is empty!');
-            }
+        // if ($cartItems->isEmpty()) {
+        //     return redirect()->route('front.index')->with('error', 'Your cart is empty!');
+        // }
 
-            $ip = $request->ip();
-            $countryCode = $this->getCountryCode($ip);
+        $ip = $request->ip();
+        // $countryCode = $this->getCountryCode($ip);
 
-            $Shipping = Shipping::orderBy('id', 'desc')->first();
-            $State = State::orderBy('stateName', 'asc')->get();
-            $countries = Country::orderBy('countryName', 'asc')->get();
+        $Shipping = Shipping::orderBy('id', 'desc')->first();
+        $State = State::orderBy('stateName', 'asc')->get();
+        $countries = Country::orderBy('countryName', 'asc')->get();
 
-            return view('frontview.checkout', compact('Shipping', 'Coupon', 'State', 'countries', 'countryCode'));
-        } catch (\Throwable $th) {
-            Log::error('Checkout View Error', [
-                'message' => $th->getMessage(),
-                'line' => $th->getLine(),
-                'file' => $th->getFile(),
-            ]);
-            return redirect()->back()->with('error', 'Failed to load checkout page. Please try again.');
-        }
+        return view('frontview.checkout', compact('Shipping', 'Coupon', 'State', 'countries'));
+        // } catch (\Throwable $th) {
+        //     Log::error('Checkout View Error', [
+        //         'message' => $th->getMessage(),
+        //         'line' => $th->getLine(),
+        //         'file' => $th->getFile(),
+        //     ]);
+        //     return redirect()->back()->with('error', 'Failed to load checkout page. Please try again.');
+        // }
     }
 
     public function get_userdata(Request $request)

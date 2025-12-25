@@ -58,6 +58,16 @@ class ProductController extends Controller
                 'categoryId' => 'required',
                 'productname' => 'required|unique:products,productname',
                 'photo' => 'required',
+
+                // OPTIONAL numeric fields
+
+                'cut_price'       => 'nullable|numeric',
+                'usd_rate'        => 'nullable|numeric',
+                'usd_cut_price'   => 'nullable|numeric',
+                'height'          => 'nullable|numeric',
+                'width'           => 'nullable|numeric',
+                'breath'          => 'nullable|numeric',
+                'weight'          => 'nullable|numeric',
             ]);
 
             $isBestSeller = $request->isBestSeller == "on" ? 1 : 0;
@@ -70,18 +80,18 @@ class ProductController extends Controller
                 'productname' => $request->productname,
                 'slugname' => Str::slug($request->productname),
                 'rate' => $request->rate,
-                'cut_price' => $request->cut_price,
-                'usd_rate' => $request->usd_rate,
-                'usd_cut_price' => $request->usd_cut_price,
-                'description' => $request->description,
+                'cut_price' => $request->cut_price ?? null,
+                'usd_rate' => $request->usd_rate ?? null,
+                'usd_cut_price' => $request->usd_cut_price ?? null,
+                'description' => $request->description ?? null,
                 'isBestSeller' => $isBestSeller ?? 0,
                 'isNewArrival' => $isNewArrival ?? 0,
                 'isGiftBoxes' => $isGiftBoxes ?? 0,
                 'isComboPacks' => $isComboPacks ?? 0,
-                'height' => $request->height,
-                'width' => $request->width,
-                'breath' => $request->breath,
-                'weight' => $request->weight,
+                'height' => $request->height ?? null,
+                'width' => $request->width ?? null,
+                'breath' => $request->breath ?? null,
+                'weight' => $request->weight ?? null,
                 'meta_title' => $request->meta_title,
                 'meta_keyword' => $request->meta_keyword,
                 'meta_description' => $request->meta_description,
@@ -144,6 +154,16 @@ class ProductController extends Controller
         $request->validate([
             'categoryId' => 'required',
             'productname' => 'required|unique:products,productname,' . $id . ',id',
+
+            // Optional numeric fields
+
+            'cut_price'      => 'nullable|numeric',
+            'usd_rate'       => 'nullable|numeric',
+            'usd_cut_price'  => 'nullable|numeric',
+            'height'         => 'nullable|numeric',
+            'width'          => 'nullable|numeric',
+            'breath'         => 'nullable|numeric',
+            'weight'         => 'nullable|numeric',
         ]);
         $isBestSeller = $request->isBestSeller == "on" ? 1 : 0;
         $isNewArrival = $request->isNewArrival == "on" ? 1 : 0;
@@ -156,18 +176,18 @@ class ProductController extends Controller
                 'productname' => $request->productname,
                 'slugname' => Str::slug($request->productname),
                 'rate' => $request->rate,
-                'cut_price' => $request->cut_price,
-                'usd_rate' => $request->usd_rate,
-                'usd_cut_price' => $request->usd_cut_price,
+                'cut_price' => $request->cut_price ?? null,
+                'usd_rate' => $request->usd_rate ?? null,
+                'usd_cut_price' => $request->usd_cut_price ?? null,
                 'description' => $request->description,
                 'isBestSeller' => $isBestSeller ?? 0,
                 'isNewArrival' => $isNewArrival ?? 0,
                 'isGiftBoxes' => $isGiftBoxes ?? 0,
                 'isComboPacks' => $isComboPacks ?? 0,
-                'height' => $request->height,
-                'width' => $request->width,
-                'breath' => $request->breath,
-                'weight' => $request->weight,
+                'height' => $request->height ?? null,
+                'width' => $request->width ?? null,
+                'breath' => $request->breath ?? null,
+                'weight' => $request->weight ?? null,
                 'meta_title' => $request->meta_title,
                 'meta_keyword' => $request->meta_keyword,
                 'meta_description' => $request->meta_description,

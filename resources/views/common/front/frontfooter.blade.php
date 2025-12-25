@@ -23,16 +23,16 @@
                 <h6 class="text-uppercase mb-4 text-white" style="letter-spacing: 2px;">Quick Link</h6>
                 <ul class="list-unstyled small">
                     <li class="mb-2 footer-link-wrap">
-                        <a href="#" class="footer-link-animated">Home</a>
+                        <a href="{{ route('front.index') }}" class="footer-link-animated">Home</a>
                     </li>
                     <li class="mb-2 footer-link-wrap">
-                        <a href="aboutus.html" class="footer-link-animated">About Us</a>
+                        <a href="{{ route('front.about') }}" class="footer-link-animated">About Us</a>
                     </li>
                     <li class="mb-2 footer-link-wrap">
-                        <a href="#" class="footer-link-animated">Blog</a>
+                        <a href="{{ route('front.blog') }}" class="footer-link-animated">Blog</a>
                     </li>
                     <li class="mb-2 footer-link-wrap">
-                        <a href="#" class="footer-link-animated">Contact Us</a>
+                        <a href="{{ route('front.contact_us') }}" class="footer-link-animated">Contact Us</a>
                     </li>
                 </ul>
             </div>

@@ -41,7 +41,7 @@
 
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mx-auto align-items-center">
-                <li class="nav-item"><a class="nav-link active" href="index.html">Home</a></li>
+                <li class="nav-item"><a class="nav-link active" href="{{ route('front.index') }}">Home</a></li>
 
                 <li class="nav-item dropdown">
                     <a class="nav-link " href="#" id="shopDropdown" role="button" data-bs-toggle="dropdown"
@@ -49,27 +49,27 @@
                         Shop <i class="fas fa-chevron-down nav-arrow"></i>
                     </a>
                     <ul class="dropdown-menu" aria-labelledby="shopDropdown">
-                        <li><a class="dropdown-item" href="product-list.html"> Spices</a></li>
-                        <li><a class="dropdown-item" href="#">Herbs</a></li>
+                        <li><a class="dropdown-item" href="{{ route('front.product_list') }}"> Spices</a></li>
+                        <li><a class="dropdown-item" href="{{ route('front.product_list') }}">Herbs</a></li>
 
                     </ul>
                 </li>
 
-                <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('front.blog') }}">Blog</a></li>
                 <li class="nav-item"><a class="nav-link" href="#">Recipe</a></li>
-                <li class="nav-item"><a class="nav-link" href="contactus.html">Contact</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('front.contact_us') }}">Contact</a></li>
             </ul>
 
             <div class="d-none d-lg-flex align-items-center">
                 <a href="#" class="nav-icon-btn"><i class="far fa-user"></i></a>
-                <a href="cart.html" class="nav-icon-btn ms-4"><i class="fas fa-shopping-bag"></i><span
+                <a href="{{ route('cart.list') }}" class="nav-icon-btn ms-4"><i class="fas fa-shopping-bag"></i><span
                         class="cart-badge">2</span></a>
             </div>
         </div>
     </div>
 </nav>
 
-<header id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+{{--  <header id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
     <div class="carousel-indicators justify-content-start ps-5 mb-5" style="margin-left: 3%;">
         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
@@ -118,4 +118,4 @@
             </div>
         </div>
     </div>
-</header>
+</header>  --}}

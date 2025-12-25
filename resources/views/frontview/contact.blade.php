@@ -1,6 +1,6 @@
 @extends('layouts.front')
 @section('title', 'Contact')
-  {{-- Meta tags --}}
+{{-- Meta tags --}}
 @section('opTag')
     {{-- Meta tags --}}
     <meta name="description" content="{{ $meta->metaDescription ?? '' }}">
@@ -15,150 +15,157 @@
 
 
 @section('body')
-    @if(!empty($meta->body))
-<script type="text/javascript">
+    @if (!empty($meta->body))
+        <script type="text/javascript">
             {!! $meta->body !!}
-</script>
+        </script>
     @endif
 @endsection
 @section('content')
 
     @include('common.contactalert')
 
-    <section class="page-header" style="background: linear-gradient(135deg, #2a7d3e, #8bc34a)">
-        <div class="header-overlay"></div>
 
-        <div class="header-content">
-            <h1>Contact Us</h1>
+    <!-- breadcrumb -->
+    <section class="breadcrumb-aromatic d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="page-title mb-3 reveal">Contact Us</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center mb-0">
+                            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                            <!-- <li class="breadcrumb-item"><a href="#">Shop</a></li> -->
+                            <li class="breadcrumb-item active " aria-current="page">Contact Us</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
 
-            <nav class="bredcrum">
-                <ul>
-                    <li><a href="{{ route('front.index') }}">Home</a></li>
-                    <li>Contact Us</li>
-                </ul>
-            </nav>
+    <section class="contact-section position-relative py-5">
+
+        <div class="bg-decoration-circle"></div>
+
+        <div class="container position-relative z-1">
+            <div class="row g-0 contact-card-wrapper">
+
+                <div class="col-lg-5">
+                    <div class="contact-info-panel h-100 d-flex flex-column justify-content-between">
+
+                        <div>
+                            <h6 class="text-gold text-uppercase letter-spacing-2 mb-4">Get in Touch</h6>
+                            <h2 class="serif-font text-white mb-4 display-5">Let's Talk Spice.</h2>
+                            <p class="mb-5">
+                                Whether you're looking for bulk orders, have a question about our sourcing,
+                                or just want to share a recipe, we're here to listen.
+                            </p>
+
+                            <div class="info-item mb-4">
+                                <i class="fas fa-map-marker-alt icon-gold"></i>
+                                <div>
+                                    <h6 class="text-white mb-1">Experience Center</h6>
+                                    <p class=" small mb-0">918 - Gala Empire, Opposite Doordarshan Tower, Drive - in
+                                        Road , Thaltej, Ahmedabad - 380051.</p>
+                                </div>
+                            </div>
+
+                            <div class="info-item mb-4">
+                                <i class="fas fa-envelope icon-gold"></i>
+                                <div>
+                                    <h6 class="text-white mb-1">Email Us</h6>
+                                    <a href="mailto:sales@velourspices.com"
+                                        class="text-white small text-decoration-none hover-white">sales@velourspices.com</a>
+                                </div>
+                            </div>
+
+                            <div class="info-item mb-4">
+                                <i class="fas fa-phone icon-gold"></i>
+                                <div>
+                                    <h6 class="text-white mb-1">Call Us</h6>
+                                    <a href="tel:+916356933345" class="text-white text-decoration-none small mb-0">+91
+                                        63569 33345</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5">
+                            <span class="text-gold small me-3">Follow Us:</span>
+                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    <div class="contact-form-panel h-100">
+                        <form>
+                            <div class="row g-4">
+                                <div class="col-md-6">
+                                    <div class="floating-group">
+                                        <input type="text" class="form-control classic-input" id="name"
+                                            placeholder=" " required>
+                                        <label for="name" class="floating-label">Your Name</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="floating-group">
+                                        <input type="email" class="form-control classic-input" id="email"
+                                            placeholder=" " required>
+                                        <label for="email" class="floating-label">Email Address</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="floating-group">
+                                        <select class="form-select classic-input" id="subject">
+                                            <option value="" selected disabled>Select a Topic</option>
+                                            <option value="1">Bulk / Wholesale Inquiry</option>
+                                            <option value="2">Order Support</option>
+                                            <option value="3">General Inquiry</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="floating-group">
+                                        <textarea class="form-control classic-input" id="message" rows="4" placeholder=" "></textarea>
+                                        <label for="message" class="floating-label">Write your message here...</label>
+                                    </div>
+                                </div>
+
+                                <div class="col-12 mt-5 text-end">
+                                    <button type="submit" class="btn btn-send">
+                                        Send Message <i class="fas fa-paper-plane ms-2"></i>
+                                    </button>
+                                </div>
+
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12">
+                    <div class="map-frame-wrapper reveal">
+                        <iframe
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3671.698779634749!2d72.52274231496708!3d23.04943888493952!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e84b8f0f5b5f1%3A0x5e2b0b0b0b0b0b0b!2sGala%20Empire!5e0!3m2!1sen!2sin!4v1625555555555!5m2!1sen!2sin"
+                            width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                            referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </section>
 
 
-    <div class="contact-section mt-5 mb-5 mx-auto">
-        <div class="info-block location-details">
-            <div class="block-heading">
-                <h3><i class="fa-solid fa-location-dot"></i> Office Address</h3>
-            </div>
-            <div class="block-content">
-                <ul class="address-list">
-                    <li>
-                        <i class="fa-solid fa-phone"></i>
-                        <div>
-                            <strong>Phone:</strong>
-                            <p><a href="tel:+917777924902">+91 77779 24902</a></p>
-                        </div>
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-envelope"></i>
-                        <div>
-                            <strong>E-Mail:</strong>
-                            <p><a href="mailto:connect@orovedaorganics.com">connect@orovedaorganics.com</a></p>
-                        </div>
-                    </li>
-                    <li>
-                        <i class="fa-solid fa-map-marker-alt"></i>
-                        <div>
-                            <strong>Address:</strong>
-                            <p><a href="#">ahmedabad, Gujarat</a></p>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-
-        <div class="info-block message-form">
-            <div class="block-heading">
-                <h3><i class="fa-solid fa-pen-to-square"></i> Get In Touch</h3>
-            </div>
-            <div class="block-content">
-                <form action="{{ route('front.contact_us_store') }}" method="post" autocomplete="off">
-                    @csrf
-                    <div class="input-grid">
-                        <div class="input-field">
-                            <input type="text" name="first_name" placeholder="First Name" required
-                                class="form-input @error('first_name') is-invalid @enderror"
-                                value="{{ old('first_name') }}">
-                            @error('first_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="input-field">
-                            <input type="text" name="last_name" placeholder="Last Name" required
-                                class="form-input @error('last_name') is-invalid @enderror" value="{{ old('last_name') }}">
-                            @error('last_name')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="input-grid">
-                        <div class="input-field">
-                            <input type="email" name="email" placeholder="Email Address" required
-                                class="form-input @error('email') is-invalid @enderror" value="{{ old('email') }}">
-                            @error('email')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="input-field">
-                            <input type="text" name="subject" placeholder="Subject" required
-                                class="form-input @error('subject') is-invalid @enderror" value="{{ old('subject') }}">
-                            @error('subject')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="input-field">
-                        <textarea name="message" placeholder="Message..." rows="5" required
-                            class="form-input @error('message') is-invalid @enderror">{{ old('message') }}</textarea>
-                        @error('message')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-
-                    <div class="form-group{{ $errors->has('captcha') ? ' has-error' : '' }}">
-
-                        <div class="form-group mt-4 mb-4">
-                            <div class="captcha">
-                                <span>{!! captcha_img() !!}</span>
-                                <button type="button" class="btn btn-danger" class="reload" id="reload">
-                                    &#x21bb;
-                                </button>
-                            </div>
-                        </div>
-                        <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha" name="captcha"
-                            required>
-                        @if ($errors->has('captcha'))
-                            <span class="help-block">
-                                <strong class="">{{ $errors->first('captcha') }}</strong>
-                            </span>
-                        @endif
-                    </div>
-
-                    <button type="submit" class="send-button">Submit Message</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-
-
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-12">
-                <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d235014.25776274438!2d72.4149249735986!3d23.02018175513144!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e848aba5bd449%3A0x4fcedd11614f6516!2sAhmedabad%2C%20Gujarat!5e0!3m2!1sen!2sin!4v1678886450123!5m2!1sen!2sin"
-                    width="100%" height="350px" style="border:0;" allowfullscreen="" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade">
-                </iframe>
-            </div>
-        </div>
-    </div>
 
 @endsection
 
