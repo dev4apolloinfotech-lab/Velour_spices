@@ -101,12 +101,13 @@
 
                 <div class="col-lg-7">
                     <div class="contact-form-panel h-100">
-                        <form>
+                        <form action="{{ route('front.contact_us_store') }}" method="POST" enctype="multipart/form-data">
+                            @csrf
                             <div class="row g-4">
                                 <div class="col-md-6">
                                     <div class="floating-group">
                                         <input type="text" class="form-control classic-input" id="name"
-                                            placeholder=" " required>
+                                            name="name" placeholder=" " required>
                                         <label for="name" class="floating-label">Your Name</label>
                                     </div>
                                 </div>
@@ -114,14 +115,14 @@
                                 <div class="col-md-6">
                                     <div class="floating-group">
                                         <input type="email" class="form-control classic-input" id="email"
-                                            placeholder=" " required>
+                                            name="email" placeholder=" " required>
                                         <label for="email" class="floating-label">Email Address</label>
                                     </div>
                                 </div>
 
                                 <div class="col-12">
                                     <div class="floating-group">
-                                        <select class="form-select classic-input" id="subject">
+                                        <select class="form-select classic-input" id="subject" name="Topic">
                                             <option value="" selected disabled>Select a Topic</option>
                                             <option value="1">Bulk / Wholesale Inquiry</option>
                                             <option value="2">Order Support</option>
@@ -132,9 +133,34 @@
 
                                 <div class="col-12">
                                     <div class="floating-group">
-                                        <textarea class="form-control classic-input" id="message" rows="4" placeholder=" "></textarea>
+                                        <textarea class="form-control classic-input" id="message" name="message" rows="4" placeholder=" "></textarea>
                                         <label for="message" class="floating-label">Write your message here...</label>
                                     </div>
+                                </div>
+
+                                <div class="form-group{{ $errors->has('captcha') ? ' has-error' : '' }}">
+
+                                    <div class="form-group mt-4 mb-4">
+                                        <div class="captcha">
+                                            <span>{!! captcha_img() !!}</span>
+                                            <button type="button" class="btn btn-danger" class="reload" id="reload">
+                                                &#x21bb;
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="floating-group">
+                                        <input id="captcha" type="text" class="form-control classic-input"
+                                            name="captcha" placeholder=" " required>
+                                        <label for="message" class="floating-label">Enter Captcha</label>
+                                    </div>
+
+
+                                    @if ($errors->has('captcha'))
+                                        <span class="help-block">
+                                            <strong class="">{{ $errors->first('captcha') }}</strong>
+                                        </span>
+                                    @endif
                                 </div>
 
                                 <div class="col-12 mt-5 text-end">

@@ -54,16 +54,20 @@ class FrontController extends Controller
     {
 
 
-        // try {
+        try {
 
+            $Category = Category::orderBy('categoryname', 'asc')->get();
+            $AllProducts = Product::get();
+            $SpicesProducts = Product::where('categoryId', 1)->get();
+            $HerbsProducts = Product::where('categoryId', 25)->get();
 
-        return view('frontview.index');
-        // } catch (\Throwable $th) {
-        //     Log::error('Home Page Error: ' . $th->getMessage(), [
-        //         'exception' => $th
-        //     ]);
-        //     return redirect()->back()->withInput()->with('error', 'Failed to load homepage. Please try again.');
-        // }
+            return view('frontview.index', compact('Category', 'AllProducts', 'SpicesProducts', 'HerbsProducts'));
+        } catch (\Throwable $th) {
+            Log::error('Home Page Error: ' . $th->getMessage(), [
+                'exception' => $th
+            ]);
+            return redirect()->back()->withInput()->with('error', 'Failed to load homepage. Please try again.');
+        }
     }
 
 
@@ -169,34 +173,19 @@ class FrontController extends Controller
     {
         $meta = MetaData::where('id', '=', '4')->first();
 
-        // Fetch active categories
-        $categories = BlogCategory::orderBy('strCategoryName', 'asc')
-            ->where(['iStatus' => 1, 'isDelete' => 0])
-            ->get();
 
-        // Base blog query
-        $query = Blog::orderBy('blogId', 'desc')
+        $Blog = Blog::orderBy('blogId', 'desc')
             ->where(['iStatus' => 1, 'isDelete' => 0]);
 
-        // Filter by category slug (if present)
-        if ($request->has('category') && $request->category != 'all') {
-            $category = BlogCategory::where('strSlug', $request->category)
-                ->where(['iStatus' => 1, 'isDelete' => 0])
-                ->first();
+        $blogs = $Blog->paginate(12);
 
-            if ($category) {
-                $query->where('category_id', $category->id);
-            }
-        }
 
-        // ✅ Keep category filter in pagination links
-        $blogs = $query->paginate(12)->appends(['category' => $request->category]);
-
-        return view('frontview.blog', compact('meta', 'blogs', 'categories'));
+        return view('frontview.blog', compact('meta', 'blogs'));
     }
 
     public function blog_detail(Request $request, $id)
     {
+
         $Blog = Blog::orderBy('blogId', 'asc')
             ->where(['iStatus' => 1, 'isDelete' => 0, 'strSlug' => $id])
             ->first();
@@ -412,13 +401,13 @@ class FrontController extends Controller
     public function contact_us_store(Request $request)
     {
         try {
+
             $request->validate(
                 [
-                    'first_name' => 'required|string|max:255',
-                    'last_name' => 'required|string|max:255',
+                    'name' => 'required|string|max:255',
                     'email' => 'required|email',
-                    'subject' => 'required|string|max:255',
-                    'message' => 'required|string',
+                    'Topic' => 'required',
+                    'message' => 'required',
                     'captcha' => 'required|captcha'
                 ],
                 [
@@ -426,10 +415,12 @@ class FrontController extends Controller
                 ]
             );
 
+
             $data = array(
-                'name' => $request->first_name . ' ' . $request->last_name,
+                'name' => $request->name,
                 'email' => $request->email,
-                'subject' => $request->subject,
+                'subject' => $request->Topic,
+                'captcha' => $request->captcha,
                 'message' => $request->message,
                 "strIp" => $request->ip(),
                 "created_at" => now()
@@ -437,7 +428,7 @@ class FrontController extends Controller
             Inquiry::create($data);
 
             $SendEmailDetails = DB::table('sendemaildetails')->where(['id' => 4])->first();
-            //dd($SendEmailDetails);
+
 
             if ($SendEmailDetails) {
                 $msg = [
