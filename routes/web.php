@@ -403,8 +403,6 @@ Route::get('/Page-Not-Available', [FrontController::class, 'ordernotavailable'])
 
 
 Route::get('/Thank-You', [FrontController::class, 'contactthankyou'])->name('contactthankyou');
-
-
 //payment
 Route::get('card-payment/{id}', [RazorpayController::class, 'index'])->name('razorpay.index')->where(['id' => '[0-9]+']);
 Route::post('paysuccess', [RazorpayController::class, 'razorPaySuccess'])->name('razprpay.success');

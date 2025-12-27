@@ -122,14 +122,14 @@
                         <button class="nav-link active" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all"
                             type="button" role="tab">All</button>
                     </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-spices-tab" data-bs-toggle="pill" data-bs-target="#pills-spices"
-                            type="button" role="tab">Spices</button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-herbs-tab" data-bs-toggle="pill"
-                            data-bs-target="#pills-herbs" type="button" role="tab">Herbs</button>
-                    </li>
+                    @foreach ($Category as $cat)
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-{{ $cat->slugname }}-tab" data-bs-toggle="pill"
+                                data-bs-target="#pills-{{ $cat->slugname }}" type="button" role="tab">
+                                {{ $cat->categoryname }}
+                            </button>
+                        </li>
+                    @endforeach
 
                 </ul>
             </div>
@@ -138,242 +138,109 @@
 
                 <div class="tab-pane fade show active" id="pills-all" role="tabpanel">
                     <div class="row g-4">
-                        <div class="col-md-6 col-lg-3 reveal">
-                            <div class="prod-card">
-                                <div class="prod-img-wrap">
-                                    <span class="badge-new">Best Seller</span>
-                                    <a href="product-detail.html">
+
+                        @foreach ($AllProducts as $allpro)
+                            <div class="col-md-6 col-lg-3 reveal">
+                                <div class="prod-card">
+                                    <div class="prod-img-wrap">
+                                        <span class="badge-new">Best Seller</span>
+                                        <a href="product-detail.html">
+                                            <img src="{{ asset('assets/front/assets/image/chilli-powder.webp') }}"
+                                                class="prod-img" alt="Kashmiri Chilli">
+                                        </a>
+                                        <div class="prod-icons-bar">
+                                            <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
+                                                    class="fas fa-shopping-cart"></i></a>
+                                            <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
+                                                    class="fas fa-eye"></i></a>
+
+                                        </div>
+                                    </div>
+                                    <div class="prod-details">
+                                        <span class="prod-cat">{{ $allpro->productname ?? '' }}</span>
+                                        <a href="product-detail.html" class="prod-title">
+                                            {{ $allpro->productname ?? '' }}</a>
+                                        <div class="prod-price">₹{{ $allpro->rate ?? '' }}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+
+
+                @foreach ($Category as $cat)
+                    <div class="tab-pane fade" id="pills-{{ $cat->slugname }}" role="tabpanel">
+                        <div class="row g-4">
+                            <div class="col-md-6 col-lg-3 reveal">
+                                <div class="prod-card">
+                                    <div class="prod-img-wrap">
+                                        <span class="badge-new">Best Seller</span>
                                         <img src="{{ asset('assets/front/assets/image/chilli-powder.webp') }}"
                                             class="prod-img" alt="Kashmiri Chilli">
-                                    </a>
-                                    <div class="prod-icons-bar">
-                                        <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                        <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                class="fas fa-eye"></i></a>
+                                        <div class="prod-icons-bar">
+                                            <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
+                                                    class="fas fa-shopping-cart"></i></a>
+                                            <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
+                                                    class="fas fa-eye"></i></a>
 
+                                        </div>
+                                    </div>
+                                    <div class="prod-details">
+                                        <span class="prod-cat">Powder</span>
+                                        <a href="#" class="prod-title"> Chilli Powder</a>
+                                        <div class="prod-price">₹600.00</div>
                                     </div>
                                 </div>
-                                <div class="prod-details">
-                                    <span class="prod-cat">Powder</span>
-                                    <a href="product-detail.html" class="prod-title"> Chilli Powder</a>
-                                    <div class="prod-price">₹600.00</div>
-                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6 col-lg-3 reveal">
-                            <div class="prod-card">
-                                <div class="prod-img-wrap">
-                                    <a href="product-detail.html">
+                            <div class="col-md-6 col-lg-3 reveal">
+                                <div class="prod-card">
+                                    <div class="prod-img-wrap">
                                         <img src="{{ asset('assets/front/assets/image/corriander-powder.webp') }}"
                                             class="prod-img" alt="Lakadong Turmeric">
-                                    </a>
-                                    <div class="prod-icons-bar">
-                                        <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                        <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                class="fas fa-eye"></i></a>
+                                        <div class="prod-icons-bar">
+                                            <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
+                                                    class="fas fa-shopping-cart"></i></a>
+                                            <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
+                                                    class="fas fa-eye"></i></a>
 
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="prod-details">
-                                    <span class="prod-cat"> Powder</span>
-                                    <a href="#" class="prod-title">Coriander Powder</a>
-                                    <div class="prod-price">₹350.00</div>
+                                    <div class="prod-details">
+                                        <span class="prod-cat"> Powder</span>
+                                        <a href="#" class="prod-title">Coriander Powder</a>
+                                        <div class="prod-price">₹350.00</div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="col-md-6 col-lg-3 reveal">
-                            <div class="prod-card">
-                                <div class="prod-img-wrap">
-                                    <span class="badge-new"
-                                        style="background: var(--accent-gold); color: black;">New</span>
-                                    <img src="{{ asset('assets/front/assets/image/turmuric-powder.webp') }}"
-                                        class="prod-img" alt="Garam Masala">
+                            <div class="col-md-6 col-lg-3 reveal">
+                                <div class="prod-card">
+                                    <div class="prod-img-wrap">
+                                        <span class="badge-new"
+                                            style="background: var(--accent-gold); color: black;">New</span>
+                                        <img src="{{ asset('assets/front/assets/image/turmuric-powder.webp') }}"
+                                            class="prod-img" alt="Garam Masala">
 
-                                    <div class="prod-icons-bar">
-                                        <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                        <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                class="fas fa-eye"></i></a>
+                                        <div class="prod-icons-bar">
+                                            <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
+                                                    class="fas fa-shopping-cart"></i></a>
+                                            <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
+                                                    class="fas fa-eye"></i></a>
 
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="prod-details">
-                                    <span class="prod-cat">Powder</span>
-                                    <a href="#" class="prod-title">Turmeric Powder</a>
-                                    <div class="prod-price">₹450.00</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-lg-3 reveal">
-                            <div class="prod-card">
-                                <div class="prod-img-wrap">
-                                    <img src="{{ asset('assets/front/assets/image/chilli-flakes.webp') }}"
-                                        class="prod-img" alt="Malabar Black Pepper">
-
-                                    <div class="prod-icons-bar">
-                                        <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                        <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                class="fas fa-eye"></i></a>
-
+                                    <div class="prod-details">
+                                        <span class="prod-cat">Powder</span>
+                                        <a href="#" class="prod-title">Turmeric Powder</a>
+                                        <div class="prod-price">₹450.00</div>
                                     </div>
-                                </div>
-                                <div class="prod-details">
-                                    <span class="prod-cat">Herbs</span>
-                                    <a href="#" class="prod-title">Chilli Flakes</a>
-                                    <div class="prod-price">₹500.00</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-lg-3 reveal">
-                            <div class="prod-card">
-                                <div class="prod-img-wrap">
-                                    <span class="badge-new">Best Seller</span>
-                                    <img src="{{ asset('assets/front/assets/image/oregano.webp') }}" class="prod-img"
-                                        alt="Kashmiri Chilli">
-                                    <div class="prod-icons-bar">
-                                        <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                        <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                class="fas fa-eye"></i></a>
-
-                                    </div>
-                                </div>
-                                <div class="prod-details">
-                                    <span class="prod-cat">Powder</span>
-                                    <a href="#" class="prod-title">Oregano</a>
-                                    <div class="prod-price">₹650.00</div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-
-                <div class="tab-pane fade" id="pills-spices" role="tabpanel">
-                    <div class="row g-4">
-                        <div class="col-md-6 col-lg-3 reveal">
-                            <div class="prod-card">
-                                <div class="prod-img-wrap">
-                                    <span class="badge-new">Best Seller</span>
-                                    <img src="{{ asset('assets/front/assets/image/chilli-powder.webp') }}"
-                                        class="prod-img" alt="Kashmiri Chilli">
-                                    <div class="prod-icons-bar">
-                                        <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                        <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                class="fas fa-eye"></i></a>
-
-                                    </div>
-                                </div>
-                                <div class="prod-details">
-                                    <span class="prod-cat">Powder</span>
-                                    <a href="#" class="prod-title"> Chilli Powder</a>
-                                    <div class="prod-price">₹600.00</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-lg-3 reveal">
-                            <div class="prod-card">
-                                <div class="prod-img-wrap">
-                                    <img src="{{ asset('assets/front/assets/image/corriander-powder.webp') }}"
-                                        class="prod-img" alt="Lakadong Turmeric">
-                                    <div class="prod-icons-bar">
-                                        <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                        <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                class="fas fa-eye"></i></a>
-
-                                    </div>
-                                </div>
-                                <div class="prod-details">
-                                    <span class="prod-cat"> Powder</span>
-                                    <a href="#" class="prod-title">Coriander Powder</a>
-                                    <div class="prod-price">₹350.00</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-lg-3 reveal">
-                            <div class="prod-card">
-                                <div class="prod-img-wrap">
-                                    <span class="badge-new"
-                                        style="background: var(--accent-gold); color: black;">New</span>
-                                    <img src="{{ asset('assets/front/assets/image/turmuric-powder.webp') }}"
-                                        class="prod-img" alt="Garam Masala">
-
-                                    <div class="prod-icons-bar">
-                                        <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                        <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                class="fas fa-eye"></i></a>
-
-                                    </div>
-                                </div>
-                                <div class="prod-details">
-                                    <span class="prod-cat">Powder</span>
-                                    <a href="#" class="prod-title">Turmeric Powder</a>
-                                    <div class="prod-price">₹450.00</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="tab-pane fade" id="pills-herbs" role="tabpanel">
-                    <div class="row g-4">
-                        <div class="col-md-6 col-lg-3 reveal">
-                            <div class="prod-card">
-                                <div class="prod-img-wrap">
-                                    <img src="{{ asset('assets/front/assets/image/chilli-flakes.webp') }}"
-                                        class="prod-img" alt="Malabar Black Pepper">
-
-                                    <div class="prod-icons-bar">
-                                        <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                        <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                class="fas fa-eye"></i></a>
-
-                                    </div>
-                                </div>
-                                <div class="prod-details">
-                                    <span class="prod-cat">Herbs</span>
-                                    <a href="#" class="prod-title">Chilli Flakes</a>
-                                    <div class="prod-price">₹500.00</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-md-6 col-lg-3 reveal">
-                            <div class="prod-card">
-                                <div class="prod-img-wrap">
-                                    <span class="badge-new">Best Seller</span>
-                                    <img src="{{ asset('assets/front/assets/image/oregano.webp') }}" class="prod-img"
-                                        alt="Kashmiri Chilli">
-                                    <div class="prod-icons-bar">
-                                        <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                class="fas fa-shopping-cart"></i></a>
-                                        <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                class="fas fa-eye"></i></a>
-
-                                    </div>
-                                </div>
-                                <div class="prod-details">
-                                    <span class="prod-cat">Powder</span>
-                                    <a href="#" class="prod-title">Oregano</a>
-                                    <div class="prod-price">₹650.00</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                @endforeach
 
 
             </div>
@@ -682,34 +549,34 @@
 
     <!-- cta section -->
     <!--<section class="container mb-5 reveal">
-                            <div class="position-relative p-4 p-lg-5 text-center"
-                                style="background: linear-gradient(135deg, #1a0505 0%, #000 100%); border: 1px solid rgba(211, 47, 47, 0.2);">
+                                                                                                <div class="position-relative p-4 p-lg-5 text-center"
+                                                                                                    style="background: linear-gradient(135deg, #1a0505 0%, #000 100%); border: 1px solid rgba(211, 47, 47, 0.2);">
 
-                                <div
-                                    style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; background: var(--primary-red); filter: blur(100px); opacity: 0.2; pointer-events: none;">
-                                </div>
+                                                                                                    <div
+                                                                                                        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; background: var(--primary-red); filter: blur(100px); opacity: 0.2; pointer-events: none;">
+                                                                                                    </div>
 
-                                <div class="position-relative z-1">
-                                    <h2 class="serif-font mb-3">Join the <span class="text-red">Spice Club</span></h2>
+                                                                                                    <div class="position-relative z-1">
+                                                                                                        <h2 class="serif-font mb-3">Join the <span class="text-red">Spice Club</span></h2>
 
-                                    <p class="mb-4 " style="max-width: 500px; margin: 0 auto;">
-                                        Unlock secret recipes, early access to new harvests, and get <span class="text-red">10%
-                                            OFF</span> your first order.
-                                    </p>
+                                                                                                        <p class="mb-4 " style="max-width: 500px; margin: 0 auto;">
+                                                                                                            Unlock secret recipes, early access to new harvests, and get <span class="text-red">10%
+                                                                                                                OFF</span> your first order.
+                                                                                                        </p>
 
-                                    <div class="row justify-content-center">
-                                        <div class="col-12 col-md-8 col-lg-6">
-                                            <div class="input-group">
-                                                <input type="email" class="form-control bg-dark border-secondary text-white py-3"
-                                                    placeholder="Enter your email address" style="border-radius: 0;">
-                                                <button class="btn bg-red rounded-0 px-3 px-md-4 fw-bold" type="button">SUBSCRIBE</button>
-                                            </div>
-                                            <p class=" mt-3" style="font-size: 0.7rem;">We respect your inbox. No spam, ever.</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </section> -->
+                                                                                                        <div class="row justify-content-center">
+                                                                                                            <div class="col-12 col-md-8 col-lg-6">
+                                                                                                                <div class="input-group">
+                                                                                                                    <input type="email" class="form-control bg-dark border-secondary text-white py-3"
+                                                                                                                        placeholder="Enter your email address" style="border-radius: 0;">
+                                                                                                                    <button class="btn bg-red rounded-0 px-3 px-md-4 fw-bold" type="button">SUBSCRIBE</button>
+                                                                                                                </div>
+                                                                                                                <p class=" mt-3" style="font-size: 0.7rem;">We respect your inbox. No spam, ever.</p>
+                                                                                                            </div>
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </section> -->
 
 
 
