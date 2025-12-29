@@ -71,6 +71,27 @@
                                                         id="hiddenPhoto">
                                                 </div>
                                             </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <div>
+                                                    Rating <span style="color:red;">*</span>
+                                                    <select class="form-control" name="rating" required>
+                                                        <option value="">Select Rating</option>
+                                                        @php
+                                                            $ratings = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5];
+                                                        @endphp
+
+                                                        @foreach ($ratings as $rate)
+                                                            <option value="{{ $rate }}"
+                                                                {{ $data->rating == $rate ? 'selected' : '' }}>
+                                                                {{ $rate }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                @error('rating')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
                                             <div class="col-lg-1 col-md-6">
                                                 <div id="viewimg">
                                                     @if ($data->photo)

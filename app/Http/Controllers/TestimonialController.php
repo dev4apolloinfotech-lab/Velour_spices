@@ -30,10 +30,12 @@ class TestimonialController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
-                // 'description' => 'required',
+                'rating' => 'required',
                 // 'designation' => 'required|string|max:255',
+                // 'description' => 'required',
                 'photo' => 'image|mimes:jpeg,png,jpg,gif,svg',
             ]);
+
 
             $img = "";
             if ($request->hasFile('photo')) {
@@ -45,6 +47,7 @@ class TestimonialController extends Controller
 
             $Data = array(
                 'name' => $request->name,
+                'rating' => $request->rating,
                 'description' => $request->description,
                 'designation' => $request->designation,
                 'photo' => $img,
@@ -77,6 +80,7 @@ class TestimonialController extends Controller
         try {
             $request->validate([
                 'name' => 'required|string|max:255',
+                'rating'      => 'required|numeric|min:1|max:5',
                 // 'description' => 'required',
                 // 'designation' => 'required|string|max:255',
                 'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',
@@ -112,6 +116,7 @@ class TestimonialController extends Controller
                 'name' => $request->name,
                 'description' => $request->description,
                 'designation' => $request->designation,
+                'rating'      => $request->rating,
                 'photo' => $img,
                 'updated_at' => now(),
                 'strIP' => $request->ip()

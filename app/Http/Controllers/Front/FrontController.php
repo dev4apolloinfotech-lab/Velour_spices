@@ -33,6 +33,7 @@ use Illuminate\Support\Str;
 use Razorpay\Api\Api;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
+use PhpOffice\PhpSpreadsheet\Calculation\Category as CalculationCategory;
 
 class FrontController extends Controller
 {
@@ -54,20 +55,38 @@ class FrontController extends Controller
     {
 
 
-        try {
+        // try {
 
-            $Category = Category::orderBy('categoryname', 'asc')->get();
-            $AllProducts = Product::get();
-            $SpicesProducts = Product::where('categoryId', 1)->get();
-            $HerbsProducts = Product::where('categoryId', 25)->get();
+        $Testimonial = Testimonial::orderby('name', 'asc')->get();
+        $Category = Category::with(['products' => function ($q) {
+            $q->select(
+                'products.*',
+                DB::raw('(SELECT strphoto FROM productphotos
+                  WHERE productphotos.productid = products.id
+                  ORDER BY productphotos.productphotosid LIMIT 1) as photo')
+            );
+        }])->get();
 
-            return view('frontview.index', compact('Category', 'AllProducts', 'SpicesProducts', 'HerbsProducts'));
-        } catch (\Throwable $th) {
-            Log::error('Home Page Error: ' . $th->getMessage(), [
-                'exception' => $th
-            ]);
-            return redirect()->back()->withInput()->with('error', 'Failed to load homepage. Please try again.');
-        }
+        $blogs = Blog::orderBy('blogId', 'desc')
+            ->where(['iStatus' => 1, 'isDelete' => 0])->take(3)->get();
+
+
+        $AllProducts = Product::select(
+            'products.*',
+            DB::raw('(SELECT strphoto FROM productphotos
+              WHERE productphotos.productid = products.id
+              ORDER BY productphotos.productphotosid LIMIT 1) as photo'),
+            DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug')
+        )->get();
+
+
+        return view('frontview.index', compact('Category', 'AllProducts', 'blogs', 'Testimonial'));
+        // } catch (\Throwable $th) {
+        //     Log::error('Home Page Error: ' . $th->getMessage(), [
+        //         'exception' => $th
+        //     ]);
+        //     return redirect()->back()->withInput()->with('error', 'Failed to load homepage. Please try again.');
+        // }
     }
 
 
@@ -198,28 +217,40 @@ class FrontController extends Controller
 
         return view('frontview.blog_detail', compact('Blog', 'RecentBlog'));
     }
-    public function product_list(Request $request)
+    public function product_list(Request $request, $slugname = null)
     {
 
-        // try {
-        $meta = MetaData::where('id', '=', '5')->first();
+        try {
 
+            $Category = Category::where('slugname', $slugname)->first();
+            $Products = Product::select(
+                'products.*',
+                DB::raw('(SELECT strphoto FROM productphotos
+              WHERE productphotos.productid = products.id
+              ORDER BY productphotos.productphotosid LIMIT 1) as photo'),
+                DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
 
+            )
+                ->where('categoryId', $Category->id)
+                ->get();
+            //dd($Products);
 
-        return view('frontview.products', compact('meta'));
-        // } catch (\Throwable $th) {
-        //     if ($th instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-        //         abort(404);
-        //     }
+            $meta = MetaData::where('id', '=', '5')->first();
 
-        //     Log::error('Product List Page Error: ' . $th->getMessage(), [
-        //         'slug' => $categoryid,
-        //         'request' => $request->all(),
-        //         'exception' => $th
-        //     ]);
+            return view('frontview.products', compact('meta', 'Products', 'Category'));
+        } catch (\Throwable $th) {
+            if ($th instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+                abort(404);
+            }
 
-        //     return redirect()->back()->withInput()->with('error', 'Something went wrong while loading the product list.');
-        // }
+            Log::error('Product List Page Error: ' . $th->getMessage(), [
+                //'slug' => $categoryid,
+                'request' => $request->all(),
+                'exception' => $th
+            ]);
+
+            return redirect()->back()->withInput()->with('error', 'Something went wrong while loading the product list.');
+        }
     }
 
     // public function product_list(Request $request, $categoryid)
@@ -317,68 +348,66 @@ class FrontController extends Controller
 
     public function product_detail(Request $request, $category_id = null, $product_id = null)
     {
-        try {
-            $ip = $request->ip();
-            $countryCode = $this->getCountryCode($ip);
+        // try {
+        $ProductDetail = Product::select(
+            'products.id',
+            'products.productname',
+            'products.rate',
+            'products.usd_rate',
+            'products.cut_price',
+            'products.usd_cut_price',
+            'products.description',
+            'products.categoryId',
+            DB::raw('(SELECT strphoto FROM productphotos WHERE  productphotos.productid=products.id  LIMIT 1) as photo'),
 
-            $ProductDetail = Product::select(
-                'products.id',
-                'products.productname',
-                'products.rate',
-                'products.usd_rate',
-                'products.cut_price',
-                'products.usd_cut_price',
-                'products.description',
-                'products.categoryId',
-                DB::raw('(SELECT strphoto FROM productphotos WHERE  productphotos.productid=products.id  LIMIT 1) as photo'),
-
-                DB::raw('(
+            DB::raw('(
                         SELECT MIN(CAST(product_attribute_price AS DECIMAL(10,2)))
                         FROM product_attributes
                         WHERE product_attributes.product_id = products.id
                     ) AS product_attribute_price'),
 
-                // ⬇ id of the cheapest attribute (ties broken by id)
-                DB::raw('(
+            // ⬇ id of the cheapest attribute (ties broken by id)
+            DB::raw('(
                         SELECT pa1.id
                         FROM product_attributes pa1
                         WHERE pa1.product_id = products.id
                         ORDER BY CAST(pa1.product_attribute_price AS DECIMAL(10,2)) ASC, pa1.id ASC
                         LIMIT 1
                     ) AS min_attr_id')
-            )
-                ->orderBy('products.id', 'DESC')
-                ->where(['products.iStatus' => 1, 'products.isDelete' => 0, 'products.slugname' => $product_id])
-                ->first();
+        )
+            ->orderBy('products.id', 'DESC')
+            ->where(['products.iStatus' => 1, 'products.isDelete' => 0, 'products.slugname' => $product_id])
+            ->first();
 
-            $Photos = "";
-            if ($ProductDetail) {
-                $Photos = Productphotos::where([
-                    'productphotos.iStatus' => 1,
-                    'productphotos.isDelete' => 0,
-                    'productphotos.productid' => $ProductDetail->id
-                ])
-                    ->get();
-            }
-
-            $attributes = ProductAttributes::select(
-                'product_attributes.*',
-                'attributes.name as attribute_name'
-            )
-                ->leftJoin('attributes', 'product_attributes.product_attribute_id', '=', 'attributes.id')
-                ->where('product_attributes.product_id', $ProductDetail->id)
-                ->orderByRaw('CAST(product_attributes.product_attribute_qty AS UNSIGNED) desc')
+        $Photos = "";
+        if ($ProductDetail) {
+            $Photos = Productphotos::where([
+                'productphotos.iStatus' => 1,
+                'productphotos.isDelete' => 0,
+                'productphotos.productid' => $ProductDetail->id
+            ])
                 ->get();
-
-            return view('frontview.productdetail', compact('ProductDetail', 'Photos', 'category_id', 'product_id', 'attributes', 'countryCode'));
-        } catch (\Throwable $th) {
-            Log::error('Product Detail Page Error: ' . $th->getMessage(), [
-                'category_id' => $category_id,
-                'product_id' => $product_id,
-                'exception' => $th
-            ]);
-            return redirect()->back()->withInput()->with('error', 'Something went wrong while loading the product details.');
         }
+
+        $attributes = ProductAttributes::select(
+            'product_attributes.*',
+            'attributes.name as attribute_name'
+        )
+            ->leftJoin('attributes', 'product_attributes.product_attribute_id', '=', 'attributes.id')
+            ->where('product_attributes.product_id', $ProductDetail->id)
+            ->orderByRaw('CAST(product_attributes.product_attribute_qty AS UNSIGNED) desc')
+            ->get();
+
+
+        return view('frontview.productdetail', compact('ProductDetail', 'Photos', 'category_id', 'product_id', 'attributes'));
+        // } catch (\Throwable $th) {
+        //     Log::error('Product Detail Page Error: ' . $th->getMessage(), [
+        //         'category_id' => $category_id,
+        //         'product_id' => $product_id,
+        //         'exception' => $th
+        //     ]);
+        //     return redirect()->back()->withInput()->with('error', 'Something went wrong while loading the product details.');
+        // }
     }
 
     public function contactus(Request $request)
@@ -398,64 +427,81 @@ class FrontController extends Controller
         }
     }
 
-    public function contact_us_store(Request $request)
+    public function recipe(Request $request)
     {
         try {
+            $meta = MetaData::where('id', '1')->first();
 
-            $request->validate(
-                [
-                    'name' => 'required|string|max:255',
-                    'email' => 'required|email',
-                    'Topic' => 'required',
-                    'message' => 'required',
-                    'captcha' => 'required|captcha'
-                ],
-                [
-                    'captcha.captcha' => 'Invalid captcha code.'
-                ]
-            );
-
-
-            $data = array(
-                'name' => $request->name,
-                'email' => $request->email,
-                'subject' => $request->Topic,
-                'captcha' => $request->captcha,
-                'message' => $request->message,
-                "strIp" => $request->ip(),
-                "created_at" => now()
-            );
-            Inquiry::create($data);
-
-            $SendEmailDetails = DB::table('sendemaildetails')->where(['id' => 4])->first();
-
-
-            if ($SendEmailDetails) {
-                $msg = [
-                    'FromMail' => $SendEmailDetails->strFromMail,
-                    'Title' => $SendEmailDetails->strTitle,
-                    'ToEmail' => $SendEmailDetails->ToMail,
-                    'Subject' => $SendEmailDetails->strSubject
-                ];
-
-                // ✅ Send email
-                $mail =   Mail::send('emails.contactemail', ['data' => $data], function ($message) use ($msg) {
-                    $message->from($msg['FromMail'], $msg['Title']);
-                    $message->to($msg['ToEmail'])->subject($msg['Subject']);
-                });
-            }
-
-            return redirect()->route('contactthankyou');
+            return view('frontview.recipe', compact('meta'));
         } catch (\Throwable $th) {
-            Log::error('Contact Form Submission Error: ' . $th->getMessage(), [
-                'request_data' => $request->all(),
+            Log::error('Contact Page Load Error: ' . $th->getMessage(), [
                 'exception' => $th
             ]);
 
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Something went wrong while submitting the form. Please try again later.');
+                ->with('error', 'Failed to load contact page. Please try again.');
         }
+    }
+
+    public function contact_us_store(Request $request)
+    {
+        // try {
+
+        $request->validate(
+            [
+                'name' => 'required|string|max:255',
+                'email' => 'required|email',
+                'Topic' => 'required',
+                'message' => 'required',
+                'captcha' => 'required|captcha'
+            ],
+            [
+                'captcha.captcha' => 'Invalid captcha code.'
+            ]
+        );
+
+
+        $data = array(
+            'name' => $request->name,
+            'email' => $request->email,
+            'subject' => $request->Topic,
+            'captcha' => $request->captcha,
+            'message' => $request->message,
+            "strIp" => $request->ip(),
+            "created_at" => now()
+        );
+        Inquiry::create($data);
+
+        $SendEmailDetails = DB::table('sendemaildetails')->where(['id' => 4])->first();
+
+
+        if ($SendEmailDetails) {
+            $msg = [
+                'FromMail' => $SendEmailDetails->strFromMail,
+                'Title' => $SendEmailDetails->strTitle,
+                'ToEmail' => $SendEmailDetails->ToMail,
+                'Subject' => $SendEmailDetails->strSubject
+            ];
+
+            // ✅ Send email
+            $mail =   Mail::send('emails.contactemail', ['data' => $data], function ($message) use ($msg) {
+                $message->from($msg['FromMail'], $msg['Title']);
+                $message->to($msg['ToEmail'])->subject($msg['Subject']);
+            });
+        }
+
+        return redirect()->route('contactthankyou');
+        // } catch (\Throwable $th) {
+        //     Log::error('Contact Form Submission Error: ' . $th->getMessage(), [
+        //         'request_data' => $request->all(),
+        //         'exception' => $th
+        //     ]);
+
+        //     return redirect()->back()
+        //         ->withInput()
+        //         ->with('error', 'Something went wrong while submitting the form. Please try again later.');
+        // }
     }
 
     public function contactthankyou()

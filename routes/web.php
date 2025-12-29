@@ -333,6 +333,7 @@ Route::get('/contact-us', [FrontController::class, 'contactus'])->name('front.co
 Route::post('/contact-us', [FrontController::class, 'contact_us_store'])->name('front.contact_us_store');
 Route::get('refresh_captcha', [FrontController::class, 'refreshCaptcha'])->name('refresh_captcha');
 
+Route::get('/recipe', [FrontController::class, 'recipe'])->name('front.recipe');
 
 //===================================Cart routes start============================
 Route::get('cart', [CartController::class, 'cartList'])->name('cart.list');
@@ -415,9 +416,7 @@ Route::get('shiprocket/status/{id?}', [RazorpayController::class, 'shiprocket_st
 
 
 //product listing
-Route::get('/products-list', [FrontController::class, 'product_list'])->name('front.product_list');
-
-// Route::get('/{categoryid?}', [FrontController::class, 'product_list'])->name('front.product_list');
+Route::get('/products-list/{slugname?}', [FrontController::class, 'product_list'])->name('front.product_list');
 
 //product detail
 Route::get('/product/{category_id?}/{product_id?}', [FrontController::class, 'product_detail'])->name('front.product_detail');

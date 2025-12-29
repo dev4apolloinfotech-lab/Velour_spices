@@ -24,8 +24,6 @@
 
 @section('content')
 
-
-
     {{--  @include('common.frontmodalalert')  --}}
 
     <!-- breadcrumb -->
@@ -36,9 +34,9 @@
                     <h1 class="page-title mb-3 reveal">Product List</h1>
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb justify-content-center mb-0">
-                            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('front.index') }}">Home</a></li>
                             <!-- <li class="breadcrumb-item"><a href="#">Shop</a></li> -->
-                            <li class="breadcrumb-item active " aria-current="page">Spices</li>
+                            <li class="breadcrumb-item active " aria-current="page">{{ $Category->categoryname ?? '' }}</li>
                         </ol>
                     </nav>
                 </div>
@@ -50,73 +48,35 @@
     <section class="product-section">
         <div class="container">
             <div class="row">
-                <div class="col-md-6 col-lg-3 reveal">
-                    <div class="prod-card">
-                        <div class="prod-img-wrap">
-                            <span class="badge-new">Best Seller</span>
-                            <a href="product-detail.html">
-                                <img src="{{ asset('assets/front/assets/image/chilli-powder.webp') }}" class="prod-img"
-                                    alt="Kashmiri Chilli">
-                            </a>
-                            <div class="prod-icons-bar">
-                                <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                        class="fas fa-shopping-cart"></i></a>
-                                <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                        class="fas fa-eye"></i></a>
 
+                @foreach ($Products as $pro)
+                    <div class="col-md-6 col-lg-3 reveal">
+                        <div class="prod-card">
+                            <div class="prod-img-wrap">
+                                {{-- <span class="badge-new">Best Seller</span> --}}
+                                <a href="{{ route('front.product_detail', [$pro->category_slug, $pro->slugname]) }}">
+                                    <img src="{{ asset('uploads/product/' . $pro->photo) }}" class="prod-img"
+                                        alt="Kashmiri Chilli">
+                                </a>
+                                <div class="prod-icons-bar">
+                                    <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
+                                            class="fas fa-shopping-cart"></i></a>
+                                    <a href="{{ route('front.product_detail', [$pro->category_slug, $pro->slugname]) }}"
+                                        class="icon-btn" data-tooltip="Quick View"><i class="fas fa-eye"></i></a>
+
+                                </div>
+                            </div>
+                            <div class="prod-details">
+                                {{-- <span class="prod-cat">Powder</span> --}}
+                                <a href="{{ route('front.product_detail', [$pro->category_slug, $pro->slugname]) }}"
+                                    class="prod-title">{{ $pro->productname ?? '' }}</a>
+                                <div class="prod-price">₹{{ $pro->rate ?? '' }}</div>
                             </div>
                         </div>
-                        <div class="prod-details">
-                            <span class="prod-cat">Powder</span>
-                            <a href="product-detail.html" class="prod-title"> Chilli Powder</a>
-                            <div class="prod-price">₹600.00</div>
-                        </div>
                     </div>
-                </div>
+                @endforeach
 
-                <div class="col-md-6 col-lg-3 reveal">
-                    <div class="prod-card">
-                        <div class="prod-img-wrap">
-                            <img src="{{ asset('assets/front/assets/image/corriander-powder.webp') }}" class="prod-img"
-                                alt="Lakadong Turmeric">
-                            <div class="prod-icons-bar">
-                                <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                        class="fas fa-shopping-cart"></i></a>
-                                <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                        class="fas fa-eye"></i></a>
 
-                            </div>
-                        </div>
-                        <div class="prod-details">
-                            <span class="prod-cat"> Powder</span>
-                            <a href="product-detail.html" class="prod-title">Coriander Powder</a>
-                            <div class="prod-price">₹350.00</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-md-6 col-lg-3 reveal">
-                    <div class="prod-card">
-                        <div class="prod-img-wrap">
-                            <span class="badge-new" style="background: var(--accent-gold); color: black;">New</span>
-                            <img src="{{ asset('assets/front/assets/image/turmuric-powder.webp') }}" class="prod-img"
-                                alt="Garam Masala">
-
-                            <div class="prod-icons-bar">
-                                <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                        class="fas fa-shopping-cart"></i></a>
-                                <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                        class="fas fa-eye"></i></a>
-
-                            </div>
-                        </div>
-                        <div class="prod-details">
-                            <span class="prod-cat">Powder</span>
-                            <a href="product-detail.html" class="prod-title">Turmeric Powder</a>
-                            <div class="prod-price">₹450.00</div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>

@@ -62,8 +62,28 @@
                                             <div class="col-lg-3 col-md-6">
                                                 <div>
                                                     Photo
-                                                    <input type="file" class="form-control" name="photo" id="strPhoto"
-                                                        >
+                                                    <input type="file" class="form-control" name="photo"
+                                                        id="strPhoto">
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-4 col-md-6">
+                                                <div>
+                                                    Rating <span style="color:red;">*</span>
+                                                    <select class="form-control" name="rating" required>
+                                                        <option value="">Select Rating</option>
+                                                        <option value="1">1</option>
+                                                        <option value="1.5">1.5</option>
+                                                        <option value="2">2</option>
+                                                        <option value="2.5">2.5</option>
+                                                        <option value="3">3</option>
+                                                        <option value="3.5">3.5</option>
+                                                        <option value="4">4</option>
+                                                        <option value="4.5">4.5</option>
+                                                        <option value="5">5</option>
+                                                    </select>
+                                                    @error('rating')
+                                                        <span class="text-danger">{{ $message }}</span>
+                                                    @enderror
                                                 </div>
                                             </div>
                                             <div class="col-lg-1 col-md-6">

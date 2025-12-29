@@ -143,22 +143,25 @@
                             <div class="col-md-6 col-lg-3 reveal">
                                 <div class="prod-card">
                                     <div class="prod-img-wrap">
+
                                         <span class="badge-new">Best Seller</span>
-                                        <a href="product-detail.html">
-                                            <img src="{{ asset('assets/front/assets/image/chilli-powder.webp') }}"
-                                                class="prod-img" alt="Kashmiri Chilli">
+                                        <a
+                                            href="{{ route('front.product_detail', [$allpro->category_slug, $allpro->slugname]) }}">
+                                            <img src="{{ asset('uploads/product/' . $allpro->photo) }}" class="prod-img"
+                                                alt="Kashmiri Chilli">
                                         </a>
                                         <div class="prod-icons-bar">
                                             <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
                                                     class="fas fa-shopping-cart"></i></a>
-                                            <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                    class="fas fa-eye"></i></a>
+                                            <a href="{{ route('front.product_detail', [$allpro->category_slug, $allpro->slugname]) }}"
+                                                class="icon-btn" data-tooltip="Quick View"><i class="fas fa-eye"></i></a>
 
                                         </div>
                                     </div>
                                     <div class="prod-details">
-                                        <span class="prod-cat">{{ $allpro->productname ?? '' }}</span>
-                                        <a href="product-detail.html" class="prod-title">
+                                        {{-- <span class="prod-cat">{{ $allpro->productname ?? '' }}</span> --}}
+                                        <a href="{{ route('front.product_detail', [$allpro->category_slug, $allpro->slugname]) }}"
+                                            class="prod-title">
                                             {{ $allpro->productname ?? '' }}</a>
                                         <div class="prod-price">₹{{ $allpro->rate ?? '' }}</div>
                                     </div>
@@ -172,72 +175,35 @@
                 @foreach ($Category as $cat)
                     <div class="tab-pane fade" id="pills-{{ $cat->slugname }}" role="tabpanel">
                         <div class="row g-4">
-                            <div class="col-md-6 col-lg-3 reveal">
-                                <div class="prod-card">
-                                    <div class="prod-img-wrap">
-                                        <span class="badge-new">Best Seller</span>
-                                        <img src="{{ asset('assets/front/assets/image/chilli-powder.webp') }}"
-                                            class="prod-img" alt="Kashmiri Chilli">
-                                        <div class="prod-icons-bar">
-                                            <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                    class="fas fa-shopping-cart"></i></a>
-                                            <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                    class="fas fa-eye"></i></a>
+                            @forelse ($cat->products as $pro)
+                                <div class="col-md-6 col-lg-3 reveal">
+                                    <div class="prod-card">
+                                        <div class="prod-img-wrap">
+                                            <span class="badge-new">Best Seller</span>
+                                            <img src="{{ asset('uploads/product/' . $pro->photo) }}" class="prod-img"
+                                                alt="Kashmiri Chilli">
+                                            <div class="prod-icons-bar">
+                                                <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
+                                                        class="fas fa-shopping-cart"></i></a>
+                                                <a href="{{ route('front.product_detail', [$cat->slugname, $pro->slugname]) }}"
+                                                    class="icon-btn" data-tooltip="Quick View"><i
+                                                        class="fas fa-eye"></i></a>
 
+                                            </div>
+                                        </div>
+                                        <div class="prod-details">
+                                            {{-- <span class="prod-cat">Powder</span> --}}
+                                            <a href="{{ route('front.product_detail', [$cat->slugname, $pro->slugname]) }}"
+                                                class="prod-title">{{ $pro->productname ?? '' }}</a>
+                                            <div class="prod-price">₹{{ $pro->rate ?? '' }}</div>
                                         </div>
                                     </div>
-                                    <div class="prod-details">
-                                        <span class="prod-cat">Powder</span>
-                                        <a href="#" class="prod-title"> Chilli Powder</a>
-                                        <div class="prod-price">₹600.00</div>
-                                    </div>
                                 </div>
-                            </div>
-
-                            <div class="col-md-6 col-lg-3 reveal">
-                                <div class="prod-card">
-                                    <div class="prod-img-wrap">
-                                        <img src="{{ asset('assets/front/assets/image/corriander-powder.webp') }}"
-                                            class="prod-img" alt="Lakadong Turmeric">
-                                        <div class="prod-icons-bar">
-                                            <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                    class="fas fa-shopping-cart"></i></a>
-                                            <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                    class="fas fa-eye"></i></a>
-
-                                        </div>
-                                    </div>
-                                    <div class="prod-details">
-                                        <span class="prod-cat"> Powder</span>
-                                        <a href="#" class="prod-title">Coriander Powder</a>
-                                        <div class="prod-price">₹350.00</div>
-                                    </div>
+                            @empty
+                                <div class="col-12 text-center text-muted">
+                                    No products found
                                 </div>
-                            </div>
-
-                            <div class="col-md-6 col-lg-3 reveal">
-                                <div class="prod-card">
-                                    <div class="prod-img-wrap">
-                                        <span class="badge-new"
-                                            style="background: var(--accent-gold); color: black;">New</span>
-                                        <img src="{{ asset('assets/front/assets/image/turmuric-powder.webp') }}"
-                                            class="prod-img" alt="Garam Masala">
-
-                                        <div class="prod-icons-bar">
-                                            <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                                    class="fas fa-shopping-cart"></i></a>
-                                            <a href="product-detail.html" class="icon-btn" data-tooltip="Quick View"><i
-                                                    class="fas fa-eye"></i></a>
-
-                                        </div>
-                                    </div>
-                                    <div class="prod-details">
-                                        <span class="prod-cat">Powder</span>
-                                        <a href="#" class="prod-title">Turmeric Powder</a>
-                                        <div class="prod-price">₹450.00</div>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforelse
                         </div>
                     </div>
                 @endforeach
@@ -407,65 +373,57 @@
 
                         <div class="carousel-inner">
 
-                            <div class="carousel-item active">
-                                <div class="testi-card">
-                                    <div class="watermark-quote">”</div>
+                            @foreach ($Testimonial as $testimonial)
+                                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                    <div class="testi-card">
+                                        <div class="watermark-quote">”</div>
 
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <div class="star-rating mb-3">
-                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                                                    class="fas fa-star"></i><i class="fas fa-star"></i><i
-                                                    class="fas fa-star"></i>
-                                            </div>
-                                            <p class="testi-text serif-font fst-italic">
-                                                "I used to buy spices from the supermarket, but the difference is night
-                                                and day. The Chilli Powder from RedSpice has a depth of flavor I've
-                                                never experienced. It’s not just hot; it’s aromatic and smoky."
-                                            </p>
+                                        <div class="row">
+                                            <div class="col-md-9">
+                                                <div class="star-rating mb-3">
+                                                    @php
+                                                        $rating = $testimonial->rating; // example: 2.5, 3, 4.5
+                                                        $fullStars = floor($rating);
+                                                        $halfStar = $rating - $fullStars >= 0.5;
+                                                        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                                                    @endphp
 
-                                            <div class="client-info">
-                                                <img src="https://randomuser.me/api/portraits/women/44.jpg"
-                                                    class="client-img" alt="Sarah">
-                                                <div>
-                                                    <h5 class="mb-0 text-white serif-font">Sarah Jenkins</h5>
-                                                    <small class="text-muted">Home Cook • Verified Buyer</small>
+                                                    {{-- Full stars --}}
+                                                    @for ($i = 0; $i < $fullStars; $i++)
+                                                        <i class="fas fa-star text-warning"></i>
+                                                    @endfor
+
+                                                    {{-- Half star --}}
+                                                    @if ($halfStar)
+                                                        <i class="fas fa-star-half-alt text-warning"></i>
+                                                    @endif
+
+                                                    {{-- Empty stars --}}
+                                                    @for ($i = 0; $i < $emptyStars; $i++)
+                                                        <i class="far fa-star text-warning"></i>
+                                                    @endfor
+                                                </div>
+
+                                                <p class="testi-text serif-font fst-italic">
+                                                    {!! $testimonial->description ?? '' !!}
+                                                </p>
+
+                                                <div class="client-info">
+                                                    <img src="https://randomuser.me/api/portraits/women/44.jpg"
+                                                        class="client-img" alt="Sarah">
+                                                    <div>
+                                                        <h5 class="mb-0 text-white serif-font">
+                                                            {{ $testimonial->name ?? '' }}
+                                                        </h5>
+                                                        <small
+                                                            class="">{{ $testimonial->designation ?? '' }}</small>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            <div class="carousel-item">
-                                <div class="testi-card">
-                                    <div class="watermark-quote">”</div>
-
-                                    <div class="row">
-                                        <div class="col-md-9">
-                                            <div class="star-rating mb-3">
-                                                <i class="fas fa-star"></i><i class="fas fa-star"></i><i
-                                                    class="fas fa-star"></i><i class="fas fa-star"></i><i
-                                                    class="fas fa-star"></i>
-                                            </div>
-                                            <p class="testi-text serif-font fst-italic">
-                                                "As a chef, consistency is everything. The Turmeric I get from here is
-                                                always potent and pure gold in color. No flour fillers, just pure root.
-                                                Highly recommended for professional kitchens."
-                                            </p>
-
-                                            <div class="client-info">
-                                                <img src="https://randomuser.me/api/portraits/men/32.jpg"
-                                                    class="client-img" alt="David">
-                                                <div>
-                                                    <h5 class="mb-0 text-white serif-font">David Ross</h5>
-                                                    <small class="text-muted">Head Chef, The Table</small>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                            @endforeach
 
                         </div>
 
@@ -495,88 +453,56 @@
             </div>
             <!-- <a href="#" class="btn btn-outline-light rounded-0 px-4 mt-3 mt-md-0">View All Posts</a> -->
         </div>
-
         <div class="row g-4">
-            <div class="col-md-4 reveal">
-                <div class="card blog-card">
-                    <div class="blog-img-container">
-                        <div class="blog-date">12 OCT</div>
-                        <img src="https://images.unsplash.com/photo-1585937421612-70a008356fbe?q=80&w=1000&auto=format&fit=crop"
-                            class="blog-img" alt="Rogan Josh">
-                    </div>
-                    <div class="card-body px-0">
-                        <h4 class="text-red card-title mt-3 serif-font h5">The Secret to the Perfect Rogan Josh</h4>
-                        <p class="text-white small">Understanding the role of Rattanjot and Kashmiri Chilli in achieving
-                            that signature red color without artificial dyes.</p>
-                        <a href="#" class="blog-link">Read More <i class="fas fa-arrow-right ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-4 reveal">
-                <div class="card blog-card">
-                    <div class="blog-img-container">
-                        <div class="blog-date">05 NOV</div>
-                        <img src="https://images.unsplash.com/photo-1564419320461-6870880221ad?q=80&w=1000&auto=format&fit=crop"
-                            class="blog-img" alt="Glass Jars">
-                    </div>
-                    <div class="card-body px-0">
-                        <h4 class="text-red card-title mt-3 serif-font h5">Why Glass Jars Matter</h4>
-                        <p class="text-white small">Plastic leaches chemicals over time. Learn why we only use
-                            UV-protected glass jars to preserve the potency of our premium range.</p>
-                        <a href="#" class="blog-link">Read More <i class="fas fa-arrow-right ms-1"></i></a>
+            @foreach ($blogs as $blog)
+                <div class="col-md-4 reveal">
+                    <div class="card blog-card">
+                        <div class="blog-img-container">
+                            <div class="blog-date">{{ $blog->created_at->format('M d, Y') }}</div>
+                            <img src="{{ asset('uploads/Blog/' . $blog->strPhoto) }}" class="blog-img" alt="Rogan Josh">
+                        </div>
+                        <div class="card-body px-0">
+                            <h4 class="text-red card-title mt-3 serif-font h5">{{ $blog->strTitle ?? '' }}</h4>
+                            <p class="text-white small"> {{ Str::limit(strip_tags($blog->strDescription ?? ''), 70) }}</p>
+                            <a href="{{ route('front.blog_detail', $blog->strSlug) }}" class="blog-link">Read More <i
+                                    class="fas fa-arrow-right ms-1"></i></a>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-md-4 reveal">
-                <div class="card blog-card">
-                    <div class="blog-img-container">
-                        <div class="blog-date">20 NOV</div>
-                        <img src="https://images.unsplash.com/photo-1596040033229-a9821ebd058d?q=80&w=1000&auto=format&fit=crop"
-                            class="blog-img" alt="Guntur Trip">
-                    </div>
-                    <div class="card-body px-0">
-                        <h4 class="text-red card-title mt-3 serif-font h5">A Trip to Guntur</h4>
-                        <p class="text-white small">Join us as we visit the famous chilli yards of Andhra Pradesh during
-                            harvest season to select the finest crops.</p>
-                        <a href="#" class="blog-link">Read More <i class="fas fa-arrow-right ms-1"></i></a>
-                    </div>
-                </div>
-            </div>
+            @endforeach
         </div>
     </section>
 
     <!-- cta section -->
     <!--<section class="container mb-5 reveal">
-                                                                                                <div class="position-relative p-4 p-lg-5 text-center"
-                                                                                                    style="background: linear-gradient(135deg, #1a0505 0%, #000 100%); border: 1px solid rgba(211, 47, 47, 0.2);">
+                                                                                                                                                                                                                                                                                    <div class="position-relative p-4 p-lg-5 text-center"
+                                                                                                                                                                                                                                                                                        style="background: linear-gradient(135deg, #1a0505 0%, #000 100%); border: 1px solid rgba(211, 47, 47, 0.2);">
 
-                                                                                                    <div
-                                                                                                        style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; background: var(--primary-red); filter: blur(100px); opacity: 0.2; pointer-events: none;">
-                                                                                                    </div>
+                                                                                                                                                                                                                                                                                        <div
+                                                                                                                                                                                                                                                                                            style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; background: var(--primary-red); filter: blur(100px); opacity: 0.2; pointer-events: none;">
+                                                                                                                                                                                                                                                                                        </div>
 
-                                                                                                    <div class="position-relative z-1">
-                                                                                                        <h2 class="serif-font mb-3">Join the <span class="text-red">Spice Club</span></h2>
+                                                                                                                                                                                                                                                                                        <div class="position-relative z-1">
+                                                                                                                                                                                                                                                                                            <h2 class="serif-font mb-3">Join the <span class="text-red">Spice Club</span></h2>
 
-                                                                                                        <p class="mb-4 " style="max-width: 500px; margin: 0 auto;">
-                                                                                                            Unlock secret recipes, early access to new harvests, and get <span class="text-red">10%
-                                                                                                                OFF</span> your first order.
-                                                                                                        </p>
+                                                                                                                                                                                                                                                                                            <p class="mb-4 " style="max-width: 500px; margin: 0 auto;">
+                                                                                                                                                                                                                                                                                                Unlock secret recipes, early access to new harvests, and get <span class="text-red">10%
+                                                                                                                                                                                                                                                                                                    OFF</span> your first order.
+                                                                                                                                                                                                                                                                                            </p>
 
-                                                                                                        <div class="row justify-content-center">
-                                                                                                            <div class="col-12 col-md-8 col-lg-6">
-                                                                                                                <div class="input-group">
-                                                                                                                    <input type="email" class="form-control bg-dark border-secondary text-white py-3"
-                                                                                                                        placeholder="Enter your email address" style="border-radius: 0;">
-                                                                                                                    <button class="btn bg-red rounded-0 px-3 px-md-4 fw-bold" type="button">SUBSCRIBE</button>
-                                                                                                                </div>
-                                                                                                                <p class=" mt-3" style="font-size: 0.7rem;">We respect your inbox. No spam, ever.</p>
-                                                                                                            </div>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </div>
-                                                                                            </section> -->
+                                                                                                                                                                                                                                                                                            <div class="row justify-content-center">
+                                                                                                                                                                                                                                                                                                <div class="col-12 col-md-8 col-lg-6">
+                                                                                                                                                                                                                                                                                                    <div class="input-group">
+                                                                                                                                                                                                                                                                                                        <input type="email" class="form-control bg-dark border-secondary text-white py-3"
+                                                                                                                                                                                                                                                                                                            placeholder="Enter your email address" style="border-radius: 0;">
+                                                                                                                                                                                                                                                                                                        <button class="btn bg-red rounded-0 px-3 px-md-4 fw-bold" type="button">SUBSCRIBE</button>
+                                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                                    <p class=" mt-3" style="font-size: 0.7rem;">We respect your inbox. No spam, ever.</p>
+                                                                                                                                                                                                                                                                                                </div>
+                                                                                                                                                                                                                                                                                            </div>
+                                                                                                                                                                                                                                                                                        </div>
+                                                                                                                                                                                                                                                                                    </div>
+                                                                                                                                                                                                                                                                                </section> -->
 
 
 
