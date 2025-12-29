@@ -45,7 +45,7 @@
 
                 <div class="blog-content text-light">
                     <p class="mb-4">
-                        {{ Str::limit(strip_tags($Blog->strDescription ?? ''), 70) }}
+                        {!! $Blog->strDescription ?? '' !!}
                     </p>
 
                 </div>

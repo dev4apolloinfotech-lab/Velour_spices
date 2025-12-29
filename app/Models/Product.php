@@ -47,6 +47,22 @@ class Product extends Model
         'iGSTAmount' => 'decimal:2',
     ];
 
+    public function category()
+    {
+        return $this->belongsTo(Category::class, 'categoryId', 'id');
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(Productphotos::class, 'productid', 'productphotosid');
+    }
+
+    public function firstPhoto()
+    {
+        return $this->hasOne(Productphotos::class, 'productid', 'productphotosid')
+            ->orderBy('id');
+    }
+
     // Returns INR or USD based on session
     public function getCurrencyAttribute(): string
     {

@@ -1,0 +1,194 @@
+@extends('layouts.front')
+@section('title', 'About Us')
+@section('opTag')
+    {{-- Meta tags --}}
+    <meta name="description" content="{{ $meta->metaDescription ?? '' }}">
+    <meta name="keywords" content="{{ $meta->metaKeyword ?? '' }}">
+    <meta name="title" content="{{ $meta->metaTitle ?? '' }}">
+@endsection
+
+@section('head')
+    {!! $meta->head ?? '' !!}
+@endsection
+
+
+@section('body')
+    @if (!empty($meta->body))
+        <script type="text/javascript">
+            {!! $meta->body !!}
+        </script>
+    @endif
+@endsection
+@section('content')
+
+    <!-- breadcrumb -->
+    <section class="breadcrumb-aromatic d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="page-title mb-3 reveal">Recipe</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center mb-0">
+                            <li class="breadcrumb-item"><a href="{{ route('front.index') }}">Home</a></li>
+                            <!-- <li class="breadcrumb-item"><a href="#">Shop</a></li> -->
+                            <li class="breadcrumb-item active " aria-current="page">Recipe</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="recipe-section py-5">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="recipe-card p-2 rounded shadow-lg">
+                        <div class="ratio ratio-16x9 rounded overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/ynyB_10II_U?si=HZpD0OSP6si5gxa_" title="Recipe Video"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="p-3">
+                            <p class="recipe-category mb-1">Traditional Masala</p>
+                            <h5 class="recipe-title">Authentic Garam Masala Blend</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="recipe-card p-2 rounded shadow-lg">
+                        <div class="ratio ratio-16x9 rounded overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/yoW4kHHH4lQ?si=UTr-VkZZxwzIsyJW" title="Recipe Video"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="p-3">
+                            <p class="recipe-category mb-1">Herbal Tea</p>
+                            <h5 class="recipe-title">Turmeric Root Wellness Latte</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="recipe-card p-2 rounded shadow-lg">
+                        <div class="ratio ratio-16x9 rounded overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/vvPlbtXM1es?si=0s_GDLz0Brtvj1l0" title="Recipe Video"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="p-3">
+                            <p class="recipe-category mb-1">Main Course</p>
+                            <h5 class="recipe-title">Kashmiri Rogan Josh Curry</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="recipe-card p-2 rounded shadow-lg">
+                        <div class="ratio ratio-16x9 rounded overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/ynyB_10II_U?si=HZpD0OSP6si5gxa_" title="Recipe Video"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="p-3">
+                            <p class="recipe-category mb-1">Traditional Masala</p>
+                            <h5 class="recipe-title">Authentic Garam Masala Blend</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="recipe-card p-2 rounded shadow-lg">
+                        <div class="ratio ratio-16x9 rounded overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/yoW4kHHH4lQ?si=UTr-VkZZxwzIsyJW" title="Recipe Video"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="p-3">
+                            <p class="recipe-category mb-1">Herbal Tea</p>
+                            <h5 class="recipe-title">Turmeric Root Wellness Latte</h5>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 reveal">
+                    <div class="recipe-card p-2 rounded shadow-lg">
+                        <div class="ratio ratio-16x9 rounded overflow-hidden">
+                            <iframe src="https://www.youtube.com/embed/vvPlbtXM1es?si=0s_GDLz0Brtvj1l0" title="Recipe Video"
+                                allowfullscreen></iframe>
+                        </div>
+                        <div class="p-3">
+                            <p class="recipe-category mb-1">Main Course</p>
+                            <h5 class="recipe-title">Kashmiri Rogan Josh Curry</h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row mt-5">
+                <div class="col-12 text-center">
+                    <nav aria-label="Recipe pagination">
+                        <ul class="pagination justify-content-center custom-pagination">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </section>
+
+@endsection
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Scroll Reveal Script
+        window.addEventListener('scroll', reveal);
+
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+
+            for (var i = 0; i < reveals.length; i++) {
+                var windowheight = window.innerHeight;
+                var revealtop = reveals[i].getBoundingClientRect().top;
+                var revealpoint = 150;
+
+                if (revealtop < windowheight - revealpoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+
+        // Trigger once on load
+        reveal();
+    </script>
+
+    <script>
+        function loadVideo(element, videoId) {
+            // 1. Add 'playing' class to hide info cards and buttons
+            element.classList.add('playing');
+
+            // 2. Create the iframe
+            var iframe = document.createElement('iframe');
+            iframe.setAttribute('src', 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0');
+            iframe.setAttribute('width', '100%');
+            iframe.setAttribute('height', '100%');
+            iframe.setAttribute('frameborder', '0');
+            iframe.setAttribute('allow',
+                'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+            iframe.setAttribute('allowfullscreen', '');
+
+            // 3. Style the iframe to fill the card
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.zIndex = '10'; // On top of image
+
+            // 4. Append to the card
+            element.appendChild(iframe);
+        }
+    </script>
+@endsection

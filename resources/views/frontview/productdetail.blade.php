@@ -6,266 +6,222 @@
 
     @include('common.frontmodalalert')
 
-    <section class="page-header" style="background: linear-gradient(135deg, #2a7d3e, #8bc34a)">
-        <div class="header-overlay"></div>
-
-        <div class="header-content">
-            <h1>Products</h1>
-            <nav class="bredcrum">
-                <ul>
-                    <li><a href="{{ route('front.index') }}">Home</a></li>
-                    <li>Products</li>
-                </ul>
-            </nav>
+    <section class="breadcrumb-aromatic d-flex align-items-center">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1 class="page-title mb-3 reveal">Product detail</h1>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb justify-content-center mb-0">
+                            <li class="breadcrumb-item"><a href="{{ route('front.index') }}">Home</a></li>
+                            <!-- <li class="breadcrumb-item"><a href="#">Shop</a></li> -->
+                            <li class="breadcrumb-item active " aria-current="page">{{ $category_id }}</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
         </div>
     </section>
 
-    <section id="product-detail" class="py-5 bg-light">
+    <section class="product-detail-section py-5">
         <div class="container">
-            <div class="row g-5">
-                <!-- Product Image Gallery -->
-                <div class="col-md-6" data-aos="fade-right">
-                    <div id="productGallery" class="carousel slide" data-bs-ride="carousel">
-                        <div class="carousel-inner">
+            <div class="row align-items-center">
 
-                            @foreach ($Photos as $index => $photo)
-                                <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <div id="productCarousel" class="carousel slide product-image-card" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            @foreach ($Photos as $photo)
+                                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
                                     <img src="{{ asset('uploads/product/' . $photo->strphoto) }}"
-                                        class="d-block w-100 rounded shadow-sm" alt="Product Image {{ $index + 1 }}">
+                                        class="d-block w-100 product-img" alt="Kashmiri Red Chilli">
                                 </div>
                             @endforeach
 
+
                         </div>
-                        <button class="carousel-control-prev" type="button" data-bs-target="#productGallery"
+
+                        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel"
                             data-bs-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
                         </button>
-                        <button class="carousel-control-next" type="button" data-bs-target="#productGallery"
+                        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel"
                             data-bs-slide="next">
-                            <span class="carousel-control-next-icon"></span>
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
                         </button>
                     </div>
                 </div>
 
-                @php
-                    // decide which base symbol and product-level price to show
-                    $isIN = $countryCode === 'IN';
-                    $symbol = $isIN ? '₹' : '$';
-                @endphp
+                <div class="col-lg-6 ps-lg-5">
+                    <h6 class="text-gold text-uppercase letter-spacing-2 mb-2">Premium Whole Spices</h6>
+                    <h1 class="product-title display-5 mb-3">{{ $ProductDetail->productname ?? '' }}</h1>
 
-                <!-- Product Info -->
-                <div class="col-md-6" data-aos="fade-left">
-                    <h2 class="fw-bold mb-3 product-title">{{ $ProductDetail->productname }}</h2>
-                    <p class="fs-4 fw-semibold mb-3 product-price">
-                        {{ $symbol }}
-                        <span id="product-price">{{ $isIN ? $ProductDetail->rate : $ProductDetail->usd_rate }}</span>
-                    </p>
+                    <h3 class="product-price mb-4">₹ {{ $ProductDetail->rate ?? '' }} <span
+                            class="text-white fs-6 text-decoration-line-through ms-2">₹
+                            {{ $ProductDetail->cut_price ?? '' }}</span></h3>
+
 
                     @php
                         $selectedAttrId = $ProductDetail->min_attr_id ?? null;
                     @endphp
+                    <form action="" class="mb-4">
+                        <div class="row g-3 align-items-end">
 
-                    <div class="d-flex align-items-center mb-4">
-                        <label for="size" class="form-label me-3 fw-semibold">Size</label>
-                        <select id="attribute-select" name="size" class="form-select w-25 me-3" required>
-                            @foreach ($attributes as $attribute)
-                                @php
-                                    // attribute price in INR from DB
-                                    $attrInr = (float) $attribute->product_attribute_price;
+                            <div class="col-sm-6">
+                                <label class="form-label  small">Pack Size</label>
+                                <select class="form-select custom-select" aria-label="Select Size">
+                                    @foreach ($attributes as $attribute)
+                                        <option value="{{ $attribute->id }}"
+                                            data-text="{{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}"
+                                            {{ (int) $attribute->id === (int) $selectedAttrId ? 'selected' : '' }}>
+                                            {{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
-                                    // if visitor is IN -> use INR attribute price directly
-                                    if ($isIN) {
-                                        $attrPriceForView = number_format($attrInr, 2, '.', '');
-                                    } else {
-                                        // For non-IN visitors:
-                                        // If your attribute has its own USD value (e.g., $attribute->product_attribute_usd_price) use it.
-                                        // Otherwise convert using product-level ratio passed from controller.
-                                        if (
-                                            isset($attribute->product_attribute_usd_price) &&
-                                            $attribute->product_attribute_usd_price != ''
-                                        ) {
-                                            $attrPriceForView = number_format(
-                                                (float) $attribute->product_attribute_usd_price,
-                                                2,
-                                                '.',
-                                                '',
-                                            );
-                                        } elseif ($conversionRatio > 0) {
-                                            $attrPriceForView = number_format($attrInr * $conversionRatio, 2, '.', '');
-                                        } else {
-                                            // fallback to INR price if conversion unavailable
-                                            $attrPriceForView = number_format($attrInr, 2, '.', '');
-                                        }
-                                    }
-                                @endphp
-
-                                <option value="{{ $attribute->id }}" data-price="{{ $attrPriceForView }}"
-                                    data-text="{{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}"
-                                    {{ (int) $attribute->id === (int) $selectedAttrId ? 'selected' : '' }}>
-                                    {{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <!-- Quantity + Add to Cart -->
-                    <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="d-flex align-items-center mb-4">
-                            <label for="quantity" class="me-3 fw-semibold">Quantity:</label>
-                            <input type="number" name="quantity" id="quantity" class="form-control w-25 me-3"
-                                value="1" min="1">
-
-
-
-                            <input type="hidden" name="productid" value="{{ $ProductDetail->id }}">
-                            <input type="hidden" name="categoryId" value="{{ $ProductDetail->categoryId }}">
-                            <input type="hidden" name="productname" value="{{ $ProductDetail->productname }}">
-                            <input type="hidden" name="image" value="{{ $ProductDetail->photo }}">
-                            <input type="hidden" name="attribute_id" id="selected-attribute-id" value="">
-                            <input type="hidden" name="price" id="hidden-price"
-                                value="{{ $isIN ? $ProductDetail->rate : $ProductDetail->usd_rate }}">
-                            <input type="hidden" name="symbol" value="{{ $symbol }}">
-                            <input type="hidden" name="attribute_text" id="selected-attribute-text" value="">
-
-                            <button class="btn-primary-2025 text-white px-4" type="submit">
-                                Add to Cart
-                            </button>
-                            {{--  <a href="#" class="btn-primary-2025 text-white px-4">Add to Cart</a>  --}}
+                            <div class="col-sm-6">
+                                <label class="form-label small">Quantity</label>
+                                <div class="input-group">
+                                    <input type="number" class="form-control custom-input" value="1" min="1">
+                                    <a href="cart.html" class="btn btn-add-cart" type="button">
+                                        Add to Cart
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </form>
 
-                    <!-- Short Highlights -->
-                    <ul class="list-unstyled text-muted">
-                        <li>✔️ 100% Gir Cow Ghee</li>
-                        <li>✔️ Traditional Bilona Process</li>
-                        <li>✔️ No Preservatives or Additives</li>
-                        <li>✔️ Naturally Rich Aroma & Flavor</li>
-                    </ul>
+                    <hr class="border-secondary my-4">
 
-                </div>
-            </div>
-
-            <!-- Tabs Section -->
-            <div class="row mt-5" data-aos="fade-up">
-                <div class="col-12">
-                    <ul class="nav nav-tabs" id="productTab" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc"
-                                type="button" role="tab">
-                                Description
-                            </button>
+                    <ul class="list-unstyled benefits-list">
+                        <li>
+                            <i class="fas fa-check text-gold me-3"></i>
+                            Naturally Vibrant Red (No Artificial Dyes)
                         </li>
 
+                        <li>
+                            <i class="fas fa-check text-gold me-3"></i>
+                            Made from Sun-Dried, Stem-less Chillies
+                        </li>
+
+                        <li>
+                            <i class="fas fa-check text-gold me-3"></i>
+                            Cold-Ground to Retain Essential Oils
+                        </li>
+
+                        <li>
+                            <i class="fas fa-check text-gold me-3"></i>
+                            Perfect Balance of Heat & Aroma
+                        </li>
                     </ul>
-
-                    <div class="tab-content py-4" id="productTabContent">
-                        <!-- Description Tab -->
-                        <div class="tab-pane fade show active" id="desc" role="tabpanel">
-                            <p>
-                                {!! $ProductDetail->description !!}
-                            </p>
-                        </div>
-
-                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Coming Soon -->
-    <section class="section-padding">
+
+    <section class="simple-info-section py-5">
         <div class="container">
-            <div class="coming-soon-2025" data-aos="fade-up">
-                <h2 class="coming-soon-title">Coming Soon</h2>
-                <p style="color: white; font-size: 1.1rem;">We're expanding our organic product range to bring you more
-                    natural goodness</p>
-                <div class="coming-soon-items">
-                    <div class="coming-soon-item">
-                        <i class="bi bi-circle-fill me-2"></i> Organic Makhana
-                    </div>
-                    <div class="coming-soon-item">
-                        <i class="bi bi-circle-fill me-2"></i> Traditional Spices
-                    </div>
-                    <div class="coming-soon-item">
-                        <i class="bi bi-circle-fill me-2"></i> Herbal Teas
-                    </div>
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h3 class="text-white border-bottom border-secondary pb-3 serif-font">
+                        Description
+                    </h3>
                 </div>
             </div>
+            <div class="mb-5">
+                <h4 class="text-gold mb-3 serif-font">About this Item</h4>
+                <div class="text-muted product-text-body">
+                    <p>
+                        Our Kashmiri Red Chilli Powder is a staple in Indian cooking, renowned for its brilliant red
+                        color and mild pungency. Unlike ordinary chilli powders that focus on heat, this variety is
+                        curated to add a rich texture and a smoky flavor profile to your curries.
+                    </p>
+                    <p>
+                        Sourced directly from the farms in Kashmir, the chillies are sun-dried to preserve their natural
+                        oils and then ground using temperature-controlled processes.
+                    </p>
+                </div>
+            </div>
+
+
+
         </div>
     </section>
+
+    <div class="row  pt-4 border-top border-secondary text-center">
+        <div class="col-6 col-md-3 mb-3">
+            <i class="fas fa-seedling text-gold mb-2 fs-4"></i>
+            <h6 class="text-white small text-uppercase">100% Vegan</h6>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <i class="fas fa-ban text-gold mb-2 fs-4"></i>
+            <h6 class="text-white small text-uppercase">Gluten Free</h6>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <i class="fas fa-flask text-gold mb-2 fs-4"></i>
+            <h6 class="text-white small text-uppercase">No Additives</h6>
+        </div>
+        <div class="col-6 col-md-3 mb-3">
+            <i class="fas fa-shipping-fast text-gold mb-2 fs-4"></i>
+            <h6 class="text-white small text-uppercase">Fresh Shipping</h6>
+        </div>
+    </div>
 
 @endsection
 
 @section('scripts')
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- AOS JS -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-
-    <script src="assets/js/scripts.js" type="text/javascript"></script>
-
     <script>
-        // Restart animation when slide changes
-        const carousel = document.querySelector('#heroCarousel');
-        carousel.addEventListener('slide.bs.carousel', (e) => {
-            const animElems = e.relatedTarget.querySelectorAll('.animate__animated');
-            animElems.forEach(el => {
-                el.classList.remove('animate__fadeInDown', 'animate__fadeInUp', 'animate__zoomIn');
-                void el.offsetWidth; // trigger reflow
-                el.classList.add('animate__fadeInDown', 'animate__fadeInUp', 'animate__zoomIn');
-            });
-        });
+        // Scroll Reveal Script
+        window.addEventListener('scroll', reveal);
+
+        function reveal() {
+            var reveals = document.querySelectorAll('.reveal');
+
+            for (var i = 0; i < reveals.length; i++) {
+                var windowheight = window.innerHeight;
+                var revealtop = reveals[i].getBoundingClientRect().top;
+                var revealpoint = 150;
+
+                if (revealtop < windowheight - revealpoint) {
+                    reveals[i].classList.add('active');
+                }
+            }
+        }
+
+        // Trigger once on load
+        reveal();
     </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.js"></script>
     <script>
-        const swiper = new Swiper(".testimonial-swiper", {
-            slidesPerView: 1,
-            spaceBetween: 30,
-            loop: true,
-            grabCursor: true,
-            autoplay: {
-                delay: 4000,
-                disableOnInteraction: false,
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-            breakpoints: {
-                768: {
-                    slidesPerView: 2
-                },
-                1024: {
-                    slidesPerView: 3
-                },
-            },
-        });
-    </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // set initial UI values from server-rendered option
-            const initialOption = $('#attribute-select option:selected');
-            const initPrice = parseFloat(initialOption.data('price')) || 0;
-            $('#product-price').text(initPrice.toFixed(2));
-            $('#hidden-price').val(initPrice.toFixed(2));
-            $('#selected-attribute-id').val(initialOption.val());
-            $('#selected-attribute-text').val(initialOption.data('text'));
+        function loadVideo(element, videoId) {
+            // 1. Add 'playing' class to hide info cards and buttons
+            element.classList.add('playing');
 
-            // on change, read the already-correct price from data-price
-            $('#attribute-select').on('change', function() {
-                const selected = $(this).find(':selected');
-                const price = parseFloat(selected.data('price')) || 0;
-                $('#product-price').text(price.toFixed(2));
-                $('#hidden-price').val(price.toFixed(2));
-                $('#selected-attribute-id').val(selected.val());
-                $('#selected-attribute-text').val(selected.data('text'));
-            });
-        });
-    </script>
+            // 2. Create the iframe
+            var iframe = document.createElement('iframe');
+            iframe.setAttribute('src', 'https://www.youtube.com/embed/' + videoId + '?autoplay=1&rel=0');
+            iframe.setAttribute('width', '100%');
+            iframe.setAttribute('height', '100%');
+            iframe.setAttribute('frameborder', '0');
+            iframe.setAttribute('allow',
+                'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture');
+            iframe.setAttribute('allowfullscreen', '');
 
+            // 3. Style the iframe to fill the card
+            iframe.style.position = 'absolute';
+            iframe.style.top = '0';
+            iframe.style.left = '0';
+            iframe.style.zIndex = '10'; // On top of image
+
+            // 4. Append to the card
+            element.appendChild(iframe);
+        }
+    </script>
 
 
 

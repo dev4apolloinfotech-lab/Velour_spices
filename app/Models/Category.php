@@ -24,4 +24,9 @@ class Category extends Model
         'head',
         'body'
     ];
+
+    public function products()
+    {
+        return $this->hasMany(Product::class, 'categoryId', 'id');
+    }
 }

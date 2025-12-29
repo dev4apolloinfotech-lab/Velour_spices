@@ -1,75 +1,63 @@
-{{--  @php
+ @php
 
-    use Illuminate\Http\Request;
-    $session = Session::get('customer_id');
-    $count = \Cart::getContent()->count();
-    $cartItems = \Cart::getContent();
-    $wishlist_count = App\Models\Wishlist::where([
-        'iStatus' => 1,
-        'isDelete' => 0,
-        'customerid' => $session,
-    ])->count();
+     $category = App\Models\Category::where([
+         'iStatus' => 1,
+         'isDelete' => 0,
+     ])->get();
+ @endphp
 
-    $ip = request()->ip();
-    $countryCode = getCountryCode($ip);
+ <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
+     <div class="container">
+         <a class="navbar-brand" href="{{ route('front.index') }}">
+             <div class="logo-box">
+                 <img src="{{ asset('assets/front/assets/image/velour-01.png') }}" alt="RedSpice Logo" class="nav-logo">
+             </div>
+         </a>
 
-    if ($countryCode === 'IN') {
-        $symbol = '₹';
-    } else {
-        $symbol = '$';
-    }
+         <div class="d-flex align-items-center d-lg-none ms-auto me-3">
+             <a href="#" class="nav-icon-btn"><i class="far fa-user"></i></a>
+             <a href="#" class="nav-icon-btn"><i class="fas fa-shopping-bag"></i><span
+                     class="cart-badge">2</span></a>
+         </div>
 
-@endphp  --}}
+         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+             <span class="navbar-toggler-icon"></span>
+         </button>
 
-<nav class="navbar navbar-expand-lg fixed-top navbar-dark">
-    <div class="container">
-        <a class="navbar-brand" href="index.html">
-            <div class="logo-box">
-                <img src="{{ asset('assets/front/assets/image/velour-01.png') }}" alt="RedSpice Logo" class="nav-logo">
-            </div>
-        </a>
+         <div class="collapse navbar-collapse" id="navbarNav">
+             <ul class="navbar-nav mx-auto align-items-center">
+                 <li class="nav-item"><a class="nav-link active" href="{{ route('front.index') }}">Home</a></li>
 
-        <div class="d-flex align-items-center d-lg-none ms-auto me-3">
-            <a href="#" class="nav-icon-btn"><i class="far fa-user"></i></a>
-            <a href="#" class="nav-icon-btn"><i class="fas fa-shopping-bag"></i><span
-                    class="cart-badge">2</span></a>
-        </div>
+                 <li class="nav-item dropdown">
+                     <a class="nav-link " href="#" id="shopDropdown" role="button" data-bs-toggle="dropdown"
+                         aria-expanded="false">
+                         Shop <i class="fas fa-chevron-down nav-arrow"></i>
+                     </a>
+                     <ul class="dropdown-menu" aria-labelledby="shopDropdown">
 
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+                         @foreach ($category as $cat)
+                             <li><a class="dropdown-item" href="{{ route('front.product_list', $cat->slugname) }}">
+                                     {{ $cat->categoryname ?? '' }}</a></li>
+                         @endforeach
 
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-auto align-items-center">
-                <li class="nav-item"><a class="nav-link active" href="{{ route('front.index') }}">Home</a></li>
+                     </ul>
+                 </li>
 
-                <li class="nav-item dropdown">
-                    <a class="nav-link " href="#" id="shopDropdown" role="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
-                        Shop <i class="fas fa-chevron-down nav-arrow"></i>
-                    </a>
-                    <ul class="dropdown-menu" aria-labelledby="shopDropdown">
-                        <li><a class="dropdown-item" href="{{ route('front.product_list') }}"> Spices</a></li>
-                        <li><a class="dropdown-item" href="{{ route('front.product_list') }}">Herbs</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('front.blog') }}">Blog</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('front.recipe') }}">Recipe</a></li>
+                 <li class="nav-item"><a class="nav-link" href="{{ route('front.contact_us') }}">Contact</a></li>
+             </ul>
 
-                    </ul>
-                </li>
+             <div class="d-none d-lg-flex align-items-center">
+                 <a href="#" class="nav-icon-btn"><i class="far fa-user"></i></a>
+                 <a href="{{ route('cart.list') }}" class="nav-icon-btn ms-4"><i class="fas fa-shopping-bag"></i><span
+                         class="cart-badge">2</span></a>
+             </div>
+         </div>
+     </div>
+ </nav>
 
-                <li class="nav-item"><a class="nav-link" href="{{ route('front.blog') }}">Blog</a></li>
-                <li class="nav-item"><a class="nav-link" href="#">Recipe</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('front.contact_us') }}">Contact</a></li>
-            </ul>
-
-            <div class="d-none d-lg-flex align-items-center">
-                <a href="#" class="nav-icon-btn"><i class="far fa-user"></i></a>
-                <a href="{{ route('cart.list') }}" class="nav-icon-btn ms-4"><i class="fas fa-shopping-bag"></i><span
-                        class="cart-badge">2</span></a>
-            </div>
-        </div>
-    </div>
-</nav>
-
-{{--  <header id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
+ {{--  <header id="heroCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="4000">
     <div class="carousel-indicators justify-content-start ps-5 mb-5" style="margin-left: 3%;">
         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="0" class="active"></button>
         <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="1"></button>
