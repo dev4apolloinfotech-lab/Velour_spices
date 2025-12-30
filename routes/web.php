@@ -413,8 +413,6 @@ Route::get('payment/fail', [RazorpayController::class, 'RazorFail'])->name('razo
 Route::get('thank-you', [RazorpayController::class, 'thank_you'])->name('razorpay.thank_you');
 Route::get('shiprocket/status/{id?}', [RazorpayController::class, 'shiprocket_status'])->name('shiprocket_status');
 
-
-
 //product listing
 Route::get('/products-list/{slugname?}', [FrontController::class, 'product_list'])->name('front.product_list');
 

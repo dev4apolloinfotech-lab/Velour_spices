@@ -14,9 +14,9 @@ class CartController extends Controller
             $cartItems = \Cart::getContent();
 
             $session = Session::get('customerid');
-
             $subtotal = \Cart::getSubTotal();
             $discount = session()->get('discount', 0);
+
             $total = $subtotal - $discount;
 
             $ip = $request->ip();
@@ -33,6 +33,7 @@ class CartController extends Controller
     public function addToCart(Request $request)
     {
         try {
+
             \Cart::add([
                 'id' => $request->attribute_id,
                 // 'id' => $request->productid,
@@ -41,7 +42,6 @@ class CartController extends Controller
                 'attribute_text' => $request->attribute_text,
                 'name' => $request->productname,
                 'price' => $request->price,
-                'symbol' => $request->symbol,
                 'quantity' => $request->quantity,
                 'attributes' => array(
                     'image' => $request->image,

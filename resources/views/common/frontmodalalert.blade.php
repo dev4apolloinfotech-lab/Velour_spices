@@ -94,7 +94,7 @@
             <div class="modal-content">
 
                 <div class="modal-header position-relative">
-                    <img src="{{ asset('assets/front/images/logo.png') }}" alt="Oroveda Logo">
+                    <img src="{{ asset('assets/front/assets/image/logo.png') }}" alt="Velour Logo">
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
 
