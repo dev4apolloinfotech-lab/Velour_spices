@@ -24,7 +24,7 @@
 
 @section('content')
 
-    {{--  @include('common.frontmodalalert')  --}}
+    @include('common.frontmodalalert')
 
     <!-- breadcrumb -->
     <section class="breadcrumb-aromatic d-flex align-items-center">
@@ -49,7 +49,7 @@
         <div class="container">
             <div class="row">
 
-                @foreach ($Products as $pro)
+                @foreach ($products as $pro)
                     <div class="col-md-6 col-lg-3 reveal">
                         <div class="prod-card">
                             <div class="prod-img-wrap">
@@ -59,8 +59,22 @@
                                         alt="Kashmiri Chilli">
                                 </a>
                                 <div class="prod-icons-bar">
-                                    <a href="cart.html" class="icon-btn" data-tooltip="Add to Cart"><i
-                                            class="fas fa-shopping-cart"></i></a>
+                                    <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
+                                        @csrf
+                                        <input type="hidden" name="productid" value="{{ $pro->id }}">
+                                        <input type="hidden" name="categoryId" value="{{ $pro->categoryId }}">
+                                        <input type="hidden" name="productname" value="{{ $pro->productname }}">
+                                        <input type="hidden" name="image" value="{{ $pro->photo }}">
+                                        <input type="hidden" name="attribute_id" value="{{ $pro->attribute_id }}">
+                                        <input type="hidden" name="attribute_text"
+                                            value="{{ $pro->product_attribute_qty . ' ' . $pro->attribute_name }}">
+                                        <input type="hidden" name="price" value="{{ $pro->rate }}">
+                                        <input type="hidden" name="quantity" value="1">
+                                        <button type="submit" class="icon-btn" data-tooltip="Add to Cart">
+                                            <i class="fas fa-shopping-cart"></i>
+                                        </button>
+                                    </form>
+
                                     <a href="{{ route('front.product_detail', [$pro->category_slug, $pro->slugname]) }}"
                                         class="icon-btn" data-tooltip="Quick View"><i class="fas fa-eye"></i></a>
 

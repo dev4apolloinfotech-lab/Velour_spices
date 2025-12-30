@@ -4,6 +4,8 @@
          'iStatus' => 1,
          'isDelete' => 0,
      ])->get();
+     $count = \Cart::getContent()->count();
+
  @endphp
 
  <nav class="navbar navbar-expand-lg fixed-top navbar-dark">
@@ -51,7 +53,7 @@
              <div class="d-none d-lg-flex align-items-center">
                  <a href="#" class="nav-icon-btn"><i class="far fa-user"></i></a>
                  <a href="{{ route('cart.list') }}" class="nav-icon-btn ms-4"><i class="fas fa-shopping-bag"></i><span
-                         class="cart-badge">2</span></a>
+                         class="cart-badge">{{ $count }}</span></a>
              </div>
          </div>
      </div>

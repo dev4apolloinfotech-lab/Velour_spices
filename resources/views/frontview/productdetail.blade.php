@@ -65,33 +65,48 @@
                     @php
                         $selectedAttrId = $ProductDetail->min_attr_id ?? null;
                     @endphp
-                    <form action="" class="mb-4">
-                        <div class="row g-3 align-items-end">
+                    {{-- <form action="" class="mb-4"> --}}
+                    <div class="row g-3 align-items-end">
 
-                            <div class="col-sm-6">
-                                <label class="form-label  small">Pack Size</label>
-                                <select class="form-select custom-select" aria-label="Select Size">
-                                    @foreach ($attributes as $attribute)
-                                        <option value="{{ $attribute->id }}"
-                                            data-text="{{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}"
-                                            {{ (int) $attribute->id === (int) $selectedAttrId ? 'selected' : '' }}>
-                                            {{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
+                        <div class="col-sm-6">
+                            <label class="form-label  small">Pack Size</label>
+                            <select class="form-select custom-select" aria-label="Select Size">
+                                @foreach ($attributes as $attribute)
+                                    <option value="{{ $attribute->id }}"
+                                        data-text="{{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}"
+                                        {{ (int) $attribute->id === (int) $selectedAttrId ? 'selected' : '' }}>
+                                        {{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
 
-                            <div class="col-sm-6">
-                                <label class="form-label small">Quantity</label>
-                                <div class="input-group">
-                                    <input type="number" class="form-control custom-input" value="1" min="1">
-                                    <a href="cart.html" class="btn btn-add-cart" type="button">
+                        <div class="col-sm-6">
+                            <label class="form-label small">Quantity</label>
+                            <div class="input-group">
+                                <input type="number" class="form-control custom-input" value="1" min="1">
+                                <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
+                                    @csrf
+                                    <input type="hidden" name="productid" value="{{ $ProductDetail->id }}">
+                                    <input type="hidden" name="categoryId" value="{{ $ProductDetail->categoryId }}">
+                                    <input type="hidden" name="productname" value="{{ $ProductDetail->productname }}">
+                                    <input type="hidden" name="image" value="{{ $ProductDetail->photo }}">
+                                    <input type="hidden" name="attribute_id" value="{{ $ProductDetail->attribute_id }}">
+                                    <input type="hidden" name="attribute_text"
+                                        value="{{ $ProductDetail->product_attribute_qty . ' ' . $ProductDetail->attribute_name }}">
+                                    <input type="hidden" name="price" value="{{ $ProductDetail->rate }}">
+                                    <input type="hidden" name="quantity" value="1">
+                                    <button type="submit" class="btn btn-add-cart" data-tooltip="Add to Cart">
                                         Add to Cart
-                                    </a>
-                                </div>
+                                    </button>
+                                </form>
+                                {{-- <a href="cart.html" class="btn btn-add-cart" type="button">
+
+                                    </a> --}}
                             </div>
                         </div>
-                    </form>
+                    </div>
+                    {{-- </form> --}}
 
                     <hr class="border-secondary my-4">
 

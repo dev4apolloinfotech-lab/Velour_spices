@@ -37,24 +37,9 @@ use PhpOffice\PhpSpreadsheet\Calculation\Category as CalculationCategory;
 
 class FrontController extends Controller
 {
-    // private function getCountryCode($ip)
-    // {
-    //     // $ip = '8.8.8.8';
-    //     $response = @file_get_contents("http://ip-api.com/json/{$ip}");
-
-    //     if ($response) {
-    //         $data = json_decode($response, true);
-    //         if (!empty($data['countryCode'])) {
-    //             return $data['countryCode']; // e.g. 'IN'
-    //         }
-    //     }
-    //     return 'US';
-    // }
 
     public function index(Request $request)
     {
-
-
         // try {
 
         $Testimonial = Testimonial::orderby('name', 'asc')->get();
@@ -63,7 +48,32 @@ class FrontController extends Controller
                 'products.*',
                 DB::raw('(SELECT strphoto FROM productphotos
                   WHERE productphotos.productid = products.id
-                  ORDER BY productphotos.productphotosid LIMIT 1) as photo')
+                  ORDER BY productphotos.productphotosid LIMIT 1) as photo'),
+                DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
+                DB::raw('(SELECT pa.id
+                FROM product_attributes pa
+                WHERE pa.product_id = products.id
+                ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS attribute_id'),
+
+                DB::raw('(SELECT pa.product_attribute_qty
+                FROM product_attributes pa
+                WHERE pa.product_id = products.id
+                ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS product_attribute_qty'),
+
+                DB::raw('(SELECT a.name
+                FROM attributes a
+                JOIN product_attributes pa2 ON pa2.product_attribute_id = a.id
+                WHERE pa2.product_id = products.id
+                ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS attribute_name'),
+
+                DB::raw('(SELECT pa3.product_attribute_price
+                FROM product_attributes pa3
+                WHERE pa3.product_id = products.id
+                ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS product_attribute_price')
             );
         }])->get();
 
@@ -76,8 +86,37 @@ class FrontController extends Controller
             DB::raw('(SELECT strphoto FROM productphotos
               WHERE productphotos.productid = products.id
               ORDER BY productphotos.productphotosid LIMIT 1) as photo'),
-            DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug')
-        )->get();
+            DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
+
+            DB::raw('(SELECT pa.id
+                FROM product_attributes pa
+                WHERE pa.product_id = products.id
+                ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS attribute_id'),
+
+            DB::raw('(SELECT pa.product_attribute_qty
+                FROM product_attributes pa
+                WHERE pa.product_id = products.id
+                ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS product_attribute_qty'),
+
+            DB::raw('(SELECT a.name
+                FROM attributes a
+                JOIN product_attributes pa2 ON pa2.product_attribute_id = a.id
+                WHERE pa2.product_id = products.id
+                ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS attribute_name'),
+
+            DB::raw('(SELECT pa3.product_attribute_price
+                FROM product_attributes pa3
+                WHERE pa3.product_id = products.id
+                ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS product_attribute_price')
+        )
+            ->orderBy('id', 'desc')
+            ->take(8)
+            ->where(['products.iStatus' => 1, 'products.isDelete' => 0])
+            ->get();
 
 
         return view('frontview.index', compact('Category', 'AllProducts', 'blogs', 'Testimonial'));
@@ -217,134 +256,84 @@ class FrontController extends Controller
 
         return view('frontview.blog_detail', compact('Blog', 'RecentBlog'));
     }
-    public function product_list(Request $request, $slugname = null)
+    public function product_list(Request $request, $categoryid)
     {
 
-        try {
+        // try {
+        $meta = MetaData::where('id', '=', '5')->first();
 
-            $Category = Category::where('slugname', $slugname)->first();
-            $Products = Product::select(
-                'products.*',
-                DB::raw('(SELECT strphoto FROM productphotos
-              WHERE productphotos.productid = products.id
-              ORDER BY productphotos.productphotosid LIMIT 1) as photo'),
-                DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
+        $Category = Category::orderBy('id', 'desc')->where(['isDelete' => 0, 'slugname' => $categoryid])->first();
 
-            )
-                ->where('categoryId', $Category->id)
-                ->get();
-            //dd($Products);
-
-            $meta = MetaData::where('id', '=', '5')->first();
-
-            return view('frontview.products', compact('meta', 'Products', 'Category'));
-        } catch (\Throwable $th) {
-            if ($th instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-                abort(404);
-            }
-
-            Log::error('Product List Page Error: ' . $th->getMessage(), [
-                //'slug' => $categoryid,
-                'request' => $request->all(),
-                'exception' => $th
-            ]);
-
-            return redirect()->back()->withInput()->with('error', 'Something went wrong while loading the product list.');
+        if (!$Category) {
+            abort(404); // better than redirect back for wrong slugs
         }
+
+        $limit = $request->input('limit',  16);
+
+
+        $products = Product::select(
+            'products.id',
+            'products.categoryId',
+            'products.productname',
+            'products.description',
+            'products.slugname',
+            'products.rate',
+            'products.usd_rate',
+            'products.cut_price',
+            'products.usd_cut_price',
+            DB::raw('(SELECT strphoto FROM productphotos WHERE  productphotos.productid=products.id ORDER BY products.id LIMIT 1) as photo'),
+
+            DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
+
+            // ✅ Select full product attribute details from the same lowest-price row
+            DB::raw('(SELECT pa.id
+              FROM product_attributes pa
+              WHERE pa.product_id = products.id
+              ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+              LIMIT 1) AS attribute_id'),
+
+            DB::raw('(SELECT pa.product_attribute_qty
+              FROM product_attributes pa
+              WHERE pa.product_id = products.id
+              ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+              LIMIT 1) AS product_attribute_qty'),
+
+            DB::raw('(SELECT a.name
+              FROM attributes a
+              JOIN product_attributes pa2 ON pa2.product_attribute_id = a.id
+              WHERE pa2.product_id = products.id
+              ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
+              LIMIT 1) AS attribute_name'),
+
+            DB::raw('(SELECT pa3.product_attribute_price
+              FROM product_attributes pa3
+              WHERE pa3.product_id = products.id
+              ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
+              LIMIT 1) AS product_attribute_price')
+        )
+            ->join('categories', 'products.categoryId', '=', 'categories.id')
+            ->where('categories.slugname', $categoryid)
+            ->where(['products.iStatus' => 1, 'products.isDelete' => 0]);
+
+        // Apply pagination with dynamic limit
+        $products = $products->paginate($limit)->appends($request->all());
+
+        return view('frontview.products', compact('meta', 'products', 'Category', 'categoryid'));
+        // } catch (\Throwable $th) {
+        //     if ($th instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
+        //         abort(404);
+        //     }
+
+        //     Log::error('Product List Page Error: ' . $th->getMessage(), [
+        //         'slug' => $slugname,
+        //         'request' => $request->all(),
+        //         'exception' => $th
+        //     ]);
+
+        //     return redirect()->back()->withInput()->with('error', 'Something went wrong while loading the product list.');
+        // }
     }
 
-    // public function product_list(Request $request, $categoryid)
-    // {
-
-    //     // try {
-    //         $meta = MetaData::where('id', '=', '5')->first();
-
-    //         $Category = Category::orderBy('id', 'desc')->where(['isDelete' => 0, 'slugname' => $categoryid])->first();
-
-    //         if (!$Category) {
-    //             abort(404); // better than redirect back for wrong slugs
-    //         }
-
-    //         $limit = $request->input('limit',  16);
-    //         $filter = $request->input('filter');
-
-    //         $ip = $request->ip();
-    //         $countryCode = $this->getCountryCode($ip);
-
-    //         $products = Product::select(
-    //             'products.id',
-    //             'products.categoryId',
-    //             'products.productname',
-    //             'products.description',
-    //             'products.slugname',
-    //             'products.rate',
-    //             'products.usd_rate',
-    //             'products.cut_price',
-    //             'products.usd_cut_price',
-    //             DB::raw('(SELECT strphoto FROM productphotos WHERE  productphotos.productid=products.id ORDER BY products.id LIMIT 1) as photo'),
-
-    //             DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
-
-    //             // ✅ Select full product attribute details from the same lowest-price row
-    //             DB::raw('(SELECT pa.id
-    //           FROM product_attributes pa
-    //           WHERE pa.product_id = products.id
-    //           ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
-    //           LIMIT 1) AS attribute_id'),
-
-    //             DB::raw('(SELECT pa.product_attribute_qty
-    //           FROM product_attributes pa
-    //           WHERE pa.product_id = products.id
-    //           ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
-    //           LIMIT 1) AS product_attribute_qty'),
-
-    //             DB::raw('(SELECT a.name
-    //           FROM attributes a
-    //           JOIN product_attributes pa2 ON pa2.product_attribute_id = a.id
-    //           WHERE pa2.product_id = products.id
-    //           ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
-    //           LIMIT 1) AS attribute_name'),
-
-    //             DB::raw('(SELECT pa3.product_attribute_price
-    //           FROM product_attributes pa3
-    //           WHERE pa3.product_id = products.id
-    //           ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
-    //           LIMIT 1) AS product_attribute_price')
-    //         )
-    //             ->join('categories', 'products.categoryId', '=', 'categories.id')
-    //             ->where('categories.slugname', $categoryid)
-    //             ->where(['products.iStatus' => 1, 'products.isDelete' => 0]);
-
-    //         // ✅ Apply filter if provided
-    //         if ($filter == 'bestsellers') {
-    //             $products->where('products.isBestSeller', 1);
-    //         } elseif ($filter == 'newarrivals') {
-    //             $products->where('products.isNewArrival', 1);
-    //         } elseif ($filter == 'giftboxes') {
-    //             $products->where('products.isGiftBoxes', 1);
-    //         } elseif ($filter == 'combopacks') {
-    //             $products->where('products.isComboPacks', 1);
-    //         }
-
-    //         // Apply pagination with dynamic limit
-    //         $products = $products->paginate($limit)->appends($request->all());
-    //         // dd($products);
-
-    //         return view('frontview.products', compact('meta', 'products', 'Category', 'categoryid', 'countryCode', 'filter'));
-    //     // } catch (\Throwable $th) {
-    //     //     if ($th instanceof \Symfony\Component\HttpKernel\Exception\NotFoundHttpException) {
-    //     //         abort(404);
-    //     //     }
-
-    //     //     Log::error('Product List Page Error: ' . $th->getMessage(), [
-    //     //         'slug' => $categoryid,
-    //     //         'request' => $request->all(),
-    //     //         'exception' => $th
-    //     //     ]);
-
-    //     //     return redirect()->back()->withInput()->with('error', 'Something went wrong while loading the product list.');
-    //     // }
-    // }
 
     public function product_detail(Request $request, $category_id = null, $product_id = null)
     {
@@ -359,6 +348,19 @@ class FrontController extends Controller
             'products.description',
             'products.categoryId',
             DB::raw('(SELECT strphoto FROM productphotos WHERE  productphotos.productid=products.id  LIMIT 1) as photo'),
+
+            DB::raw('(SELECT pa.id
+              FROM product_attributes pa
+              WHERE pa.product_id = products.id
+              ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+              LIMIT 1) AS attribute_id'),
+
+            DB::raw('(SELECT a.name
+              FROM attributes a
+              JOIN product_attributes pa2 ON pa2.product_attribute_id = a.id
+              WHERE pa2.product_id = products.id
+              ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
+              LIMIT 1) AS attribute_name'),
 
             DB::raw('(
                         SELECT MIN(CAST(product_attribute_price AS DECIMAL(10,2)))
@@ -562,7 +564,7 @@ class FrontController extends Controller
                 return redirect()->back()->with('error', 'Coupon is expired!');
             }
 
-            $discount = number_format(($totalAmount * $Offer->percentage) / 100, 2);
+            $discount = number_format(($totalAmount * $Offer->percentage) / 100);
 
             CustomerCouponApplyed::create([
                 'offerId' => $Offer->id ?? 0,
@@ -611,30 +613,30 @@ class FrontController extends Controller
 
     public function checkout(Request $request)
     {
-        // try {
-        $Coupon = $request->session()->get('data');
-        $cartItems = \Cart::getContent();
+        try {
+            $Coupon = $request->session()->get('discount');
+            $cartItems = \Cart::getContent();
 
-        // if ($cartItems->isEmpty()) {
-        //     return redirect()->route('front.index')->with('error', 'Your cart is empty!');
-        // }
 
-        $ip = $request->ip();
-        // $countryCode = $this->getCountryCode($ip);
+            // if ($cartItems->isEmpty()) {
+            //     return redirect()->route('front.index')->with('error', 'Your cart is empty!');
+            // }
 
-        $Shipping = Shipping::orderBy('id', 'desc')->first();
-        $State = State::orderBy('stateName', 'asc')->get();
-        $countries = Country::orderBy('countryName', 'asc')->get();
 
-        return view('frontview.checkout', compact('Shipping', 'Coupon', 'State', 'countries'));
-        // } catch (\Throwable $th) {
-        //     Log::error('Checkout View Error', [
-        //         'message' => $th->getMessage(),
-        //         'line' => $th->getLine(),
-        //         'file' => $th->getFile(),
-        //     ]);
-        //     return redirect()->back()->with('error', 'Failed to load checkout page. Please try again.');
-        // }
+
+            $Shipping = Shipping::orderBy('id', 'desc')->first();
+            $State = State::orderBy('stateName', 'asc')->get();
+            $countries = Country::orderBy('countryName', 'asc')->get();
+
+            return view('frontview.checkout', compact('Shipping', 'Coupon', 'State', 'countries'));
+        } catch (\Throwable $th) {
+            Log::error('Checkout View Error', [
+                'message' => $th->getMessage(),
+                'line' => $th->getLine(),
+                'file' => $th->getFile(),
+            ]);
+            return redirect()->back()->with('error', 'Failed to load checkout page. Please try again.');
+        }
     }
 
     public function get_userdata(Request $request)
@@ -678,7 +680,7 @@ class FrontController extends Controller
                 'state' => 'required|string|max:100',
                 'city' => 'required|string|max:100',
                 'pincode' => 'required|digits_between:5,10',
-                'country' => 'required|string|max:100',
+                //'country' => 'required|string|max:100',
             ]
             // [
             //     'billPhone.unique' => 'This phone number is already registered.',
@@ -755,13 +757,13 @@ class FrontController extends Controller
         }
 
         $ip = $request->ip();
-        $countryCode = $this->getCountryCode($ip);
+        //$countryCode = $this->getCountryCode($ip);
 
-        if ($countryCode === 'IN') {
-            $symbol = '₹';
-        } else {
-            $symbol = '$';
-        }
+        //if ($countryCode === 'IN') {
+        $symbol = '₹';
+        // } else {
+        //     $symbol = '$';
+        // }
 
         $order = Order::create([
             'customerid' => $customerid ?? 0,
@@ -799,11 +801,11 @@ class FrontController extends Controller
         }
 
         $ip = $request->ip();
-        $countryCode = $this->getCountryCode($ip);
+        //$countryCode = $this->getCountryCode($ip);
 
         $api = new Api(config('app.razorpay_key'), config('app.razorpay_secret'));
 
-        $currency = $countryCode == 'IN' ? 'INR' : 'USD';
+        $currency = 'INR';
         $razorpayOrder = $api->order->create([
             'receipt' => $order->id . '-' . date('YmdHis'),
             'amount' => $amount * 100,
