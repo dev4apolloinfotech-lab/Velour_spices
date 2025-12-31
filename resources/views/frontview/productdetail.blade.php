@@ -57,28 +57,40 @@
                     <h6 class="text-gold text-uppercase letter-spacing-2 mb-2">Premium Whole Spices</h6>
                     <h1 class="product-title display-5 mb-3">{{ $ProductDetail->productname ?? '' }}</h1>
 
-                    <h3 class="product-price mb-4">₹ {{ $ProductDetail->rate ?? '' }} <span
-                            class="text-white fs-6 text-decoration-line-through ms-2">₹
-                            {{ $ProductDetail->cut_price ?? '' }}</span></h3>
+                    <h3 class="product-price mb-4">
+                        ₹ <span id="productPrice">{{ $ProductDetail->rate }}</span>
+                        <span class="text-white fs-6 text-decoration-line-through ms-2">
+                            ₹ {{ $ProductDetail->cut_price }}
+                        </span>
+                    </h3>
+
+
 
 
                     @php
-                        $selectedAttrId = $ProductDetail->min_attr_id ?? null;
+                        use App\Models\ProductAttributes;
+
+                        $selectedAttrId = ProductAttributes::where('product_id', $ProductDetail->id)
+                            ->orderByRaw('CAST(product_attribute_price AS DECIMAL(10,2)) ASC')
+                            ->value('id');
                     @endphp
                     {{-- <form action="" class="mb-4"> --}}
                     <div class="row g-3 align-items-end">
 
                         <div class="col-sm-6">
                             <label class="form-label  small">Pack Size</label>
-                            <select class="form-select custom-select" aria-label="Select Size">
+                            <select class="form-select custom-select" id="attributeSelect">
                                 @foreach ($attributes as $attribute)
                                     <option value="{{ $attribute->id }}"
+                                        data-price="{{ $attribute->product_attribute_price }}"
                                         data-text="{{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}"
                                         {{ (int) $attribute->id === (int) $selectedAttrId ? 'selected' : '' }}>
-                                        {{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}
+                                        {{ $attribute->product_attribute_qty }} {{ $attribute->attribute_name }}
                                     </option>
                                 @endforeach
                             </select>
+
+
                         </div>
 
                         <div class="col-sm-6">
@@ -91,10 +103,13 @@
                                     <input type="hidden" name="categoryId" value="{{ $ProductDetail->categoryId }}">
                                     <input type="hidden" name="productname" value="{{ $ProductDetail->productname }}">
                                     <input type="hidden" name="image" value="{{ $ProductDetail->photo }}">
-                                    <input type="hidden" name="attribute_id" value="{{ $ProductDetail->attribute_id }}">
-                                    <input type="hidden" name="attribute_text"
-                                        value="{{ $ProductDetail->product_attribute_qty . ' ' . $ProductDetail->attribute_name }}">
-                                    <input type="hidden" name="price" value="{{ $ProductDetail->rate }}">
+                                    <input type="hidden" name="attribute_id" id="cart_attribute_id"
+                                        value="{{ $selectedAttrId }}">
+                                    <input type="hidden" name="attribute_text" id="cart_attribute_text">
+                                    <input type="hidden" name="price" id="cart_price"
+                                        value="{{ $ProductDetail->rate }}">
+
+
                                     <input type="hidden" name="quantity" value="1">
                                     <button type="submit" class="btn btn-add-cart" data-tooltip="Add to Cart">
                                         Add to Cart
@@ -188,6 +203,29 @@
 @endsection
 
 @section('scripts')
+
+    <script>
+        document.getElementById('attributeSelect').addEventListener('change', function() {
+            let selected = this.options[this.selectedIndex];
+
+            let price = selected.dataset.price;
+            let text = selected.dataset.text;
+            let attrId = selected.value;
+
+            // Update UI
+            document.getElementById('productPrice').innerText = price;
+
+            // Update cart fields
+            document.getElementById('cart_attribute_id').value = attrId;
+            document.getElementById('cart_attribute_text').value = text;
+            document.getElementById('cart_price').value = price;
+        });
+
+        // Trigger once on page load (for default attribute)
+        document.getElementById('attributeSelect').dispatchEvent(new Event('change'));
+    </script>
+
+
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>

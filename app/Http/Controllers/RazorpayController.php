@@ -104,7 +104,7 @@ class RazorpayController extends Controller
                     'Remarks' => 'Online Payment',
                 ]);
 
-                Order::where('order_id', $orderId)->update(['isPayment' => 1]);
+                Order::where('order_id', $orderId)->update(['isPayment' => 1, 'Payment_method' => 'Online']);
 
                 $cart_Items = OrderDetail::where('orderID', $orderId)->get();
 
@@ -174,8 +174,6 @@ class RazorpayController extends Controller
             $Order = Order::where("order_id", $id)->firstOrFail();
 
             $Order->update(['isPayment' => 1]);
-
-
 
             $OrderDetail = OrderDetail::select(
                 'orderdetail.orderDetailId',

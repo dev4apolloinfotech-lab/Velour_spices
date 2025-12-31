@@ -51,7 +51,7 @@
 <table style="width: 100%;">
     <tr class="no-border">
         <td class="header-logo">
-            <img width="150" src="https://www.getdemo.in/oro_veda/assets/images/logo.png" alt="Logo">
+            <img width="150" src="{{ url('assets/front/assets/image/velour-01.png') }}" alt="Logo">
         </td>
     </tr>
 </table>
@@ -112,12 +112,12 @@
             </td>
         </tr>
     @endif
-     @if ($data->created_at)
+    @if ($data->created_at)
         <tr>
             <td style="font-weight: 600;">Order Date</td>
             <td>
                 @if ($data->created_at)
-                    {{ date('d-m-Y',strtotime($data->created_at)) }}
+                    {{ date('d-m-Y', strtotime($data->created_at)) }}
                 @else
                     -
                 @endif

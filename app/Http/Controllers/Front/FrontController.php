@@ -42,6 +42,11 @@ class FrontController extends Controller
     {
         // try {
 
+        $offers = Offer::orderBy('id', 'desc')
+            ->take(1)
+            ->where(['iStatus' => 1, 'isDelete' => 0])
+            ->get();
+
         $Testimonial = Testimonial::orderby('name', 'asc')->get();
         $Category = Category::with(['products' => function ($q) {
             $q->select(
@@ -392,14 +397,16 @@ class FrontController extends Controller
         }
 
         $attributes = ProductAttributes::select(
-            'product_attributes.*',
+            'product_attributes.id',
+            'product_attributes.product_attribute_qty',
+            'product_attributes.product_attribute_weight',
+            'product_attributes.product_attribute_price',
             'attributes.name as attribute_name'
         )
             ->leftJoin('attributes', 'product_attributes.product_attribute_id', '=', 'attributes.id')
             ->where('product_attributes.product_id', $ProductDetail->id)
-            ->orderByRaw('CAST(product_attributes.product_attribute_qty AS UNSIGNED) desc')
+            ->orderByRaw('CAST(product_attributes.product_attribute_qty AS UNSIGNED) ASC')
             ->get();
-
 
         return view('frontview.productdetail', compact('ProductDetail', 'Photos', 'category_id', 'product_id', 'attributes'));
         // } catch (\Throwable $th) {
@@ -697,6 +704,7 @@ class FrontController extends Controller
 
         $cartItems = \Cart::getContent();
 
+
         if ($cartItems->isEmpty()) {
             return redirect()->back()->with('error', 'Your cart is empty!');
         }
@@ -755,15 +763,9 @@ class FrontController extends Controller
             ]);
             $customerid = $existingCustomer->customerid;
         }
-
         $ip = $request->ip();
-        //$countryCode = $this->getCountryCode($ip);
 
-        //if ($countryCode === 'IN') {
         $symbol = '₹';
-        // } else {
-        //     $symbol = '$';
-        // }
 
         $order = Order::create([
             'customerid' => $customerid ?? 0,
@@ -783,7 +785,6 @@ class FrontController extends Controller
             'created_at' => now(),
             'strIP' => $request->ip()
         ]);
-
         foreach ($cartItems as $cartItem) {
             OrderDetail::create([
                 'orderID' => $order->id,
@@ -800,8 +801,19 @@ class FrontController extends Controller
             ]);
         }
 
+        if ($request->paymentMethod == 'cash') {
+
+
+            Order::where('order_id', $order->id)->update(['isPayment' => 1, 'Payment_method' => 'Cash']);
+            DB::commit();
+            // Clear cart if required
+            \Cart::clear();
+
+            return redirect()->route('razorpay.thank_you');
+        }
+
+
         $ip = $request->ip();
-        //$countryCode = $this->getCountryCode($ip);
 
         $api = new Api(config('app.razorpay_key'), config('app.razorpay_secret'));
 
@@ -819,6 +831,8 @@ class FrontController extends Controller
             'currency' => $currency,
             'receipt' => $razorpayOrder['receipt'],
         ]);
+
+
 
         DB::commit();
 
