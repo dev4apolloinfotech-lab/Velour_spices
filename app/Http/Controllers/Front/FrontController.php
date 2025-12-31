@@ -470,20 +470,18 @@ class FrontController extends Controller
             ]
         );
 
-
+        $SendEmailDetails = DB::table('sendemaildetails')->where(['id' => 4])->first();
         $data = array(
             'name' => $request->name,
             'email' => $request->email,
-            'subject' => $request->Topic,
+            'Topic' => $request->Topic,
+            'subject' => $SendEmailDetails->strSubject,
             'captcha' => $request->captcha,
             'message' => $request->message,
             "strIp" => $request->ip(),
             "created_at" => now()
         );
         Inquiry::create($data);
-
-        $SendEmailDetails = DB::table('sendemaildetails')->where(['id' => 4])->first();
-
 
         if ($SendEmailDetails) {
             $msg = [

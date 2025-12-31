@@ -68,7 +68,6 @@
                                             <th scope="col">Photo</th>
                                             <th scope="col">Category Name</th>
                                             <th scope="col">Rate</th>
-                                            <th scope="col">USD Rate</th>
                                             <th scope="col">Status</th>
                                         </tr>
                                     </thead>
@@ -93,9 +92,6 @@
                                                 </td>
                                                 <td width="2%">
                                                     {{ $product->rate ? '₹' . $product->rate : '-' }}
-                                                </td>
-                                                <td width="2%">
-                                                    {{ $product->usd_rate ? '$' . $product->usd_rate : '-' }}
                                                 </td>
 
                                                 <td width="2%">
