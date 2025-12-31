@@ -51,7 +51,7 @@
              </ul>
 
              <div class="d-none d-lg-flex align-items-center">
-                 <a href="#" class="nav-icon-btn"><i class="far fa-user"></i></a>
+                 {{-- <a href="#" class="nav-icon-btn"><i class="far fa-user"></i></a> --}}
                  <a href="{{ route('cart.list') }}" class="nav-icon-btn ms-4"><i class="fas fa-shopping-bag"></i><span
                          class="cart-badge">{{ $count }}</span></a>
              </div>

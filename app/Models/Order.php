@@ -26,6 +26,7 @@ class Order extends Model
         'country',
         'amount',
         'currency',
+        'Payment_method',
         'discount',
         'shipping_Charges',
         'netAmount',

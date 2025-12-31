@@ -50,7 +50,8 @@
 
     <section class="checkout-section py-5">
         <div class="container">
-            <form id="checkout-form">
+            <form id="checkout-form" method="POST" action="{{ route('checkoutstore') }}">
+                @csrf
                 <div class="row">
 
                     <div class="col-lg-7 mb-5 mb-lg-0">
@@ -59,7 +60,7 @@
                         <div class="row g-4">
                             <div class="col-md-6">
                                 <label for="phone" class="form-label custom-label">Phone *</label>
-                                <input type="text" name="billPhone"
+                                <input type="text" name="billPhone" id="billPhone"
                                     class="form-control custom-input @error('billPhone') is-invalid @enderror"
                                     oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
                                     maxlength="10" minlength="10" required="required" autocomplete="off"
@@ -72,23 +73,23 @@
 
                             <div class="col-md-6">
                                 <label for="firstName" class="form-label custom-label">First Name *</label>
-                                <input type="text" name="billFirstName" class="form-control custom-input" id="firstName"
-                                    placeholder="Enter first name" value="{{ old('billFirstName') }}" required="required"
-                                    autocomplete="off">
+                                <input type="text" id="billFirstName" name="billFirstName"
+                                    class="form-control custom-input" id="firstName" placeholder="Enter first name"
+                                    value="{{ old('billFirstName') }}" required="required" autocomplete="off">
                             </div>
 
                             <div class="col-md-6">
                                 <label for="lastName" class="form-label custom-label">Last Name *</label>
-                                <input type="text" name="billLastName" class="form-control custom-input" id="lastName"
-                                    value="{{ old('billLastName') }}" placeholder="Enter last name" required="required"
-                                    autocomplete="off">
+                                <input type="text" id="billLastName" name="billLastName"
+                                    class="form-control custom-input" id="lastName" value="{{ old('billLastName') }}"
+                                    placeholder="Enter last name" required="required" autocomplete="off">
                             </div>
 
 
 
                             <div class="col-md-6">
                                 <label for="email" class="form-label custom-label">Email Address *</label>
-                                <input type="email" name="billEmail"
+                                <input type="email" id="billEmail" name="billEmail"
                                     class="form-control custom-input @error('billEmail') is-invalid @enderror"
                                     id="email" value="{{ old('billEmail') }}" placeholder="name@example.com" required>
                                 @error('billEmail')
@@ -99,29 +100,29 @@
                             <div class="col-12">
                                 <label for="address" class="form-label custom-label">Street Address *</label>
                                 <input type="text" name="billStreetAddress1" class="form-control custom-input mb-3"
-                                    id="address" placeholder="House number and street name" required="required"
+                                    id="billStreetAddress1" placeholder="House number and street name" required="required"
                                     autocomplete="off" value="{{ old('billStreetAddress1') }}">
                                 <input type="text" name="billStreetAddress2" class="form-control custom-input"
-                                    id="address2" placeholder="Apartment, suite, unit, etc. (optional)" autocomplete="off"
-                                    value="{{ old('billStreetAddress2') }}">
+                                    id="billStreetAddress2" placeholder="Apartment, suite, unit, etc. (optional)"
+                                    autocomplete="off" value="{{ old('billStreetAddress2') }}">
                             </div>
 
                             <div class="col-md-4">
                                 <label for="city" class="form-label custom-label">Town / City *</label>
-                                <input type="text" name="city" class="form-control custom-input" id="city"
-                                    required value="{{ old('city') }}">
+                                <input type="text" id="shipping_city" name="city" class="form-control custom-input"
+                                    id="city" required value="{{ old('city') }}">
                             </div>
 
                             <div class="col-md-4">
                                 <label for="state" class="form-label custom-label">State *</label>
-                                <input type="text" name="state" class="form-control custom-input" id="state"
-                                    required value="{{ old('state') }}">
+                                <input type="text" id="billState" name="state" class="form-control custom-input"
+                                    id="state" required value="{{ old('state') }}">
                             </div>
 
                             <div class="col-md-4">
                                 <label for="zip" class="form-label custom-label">PIN Code *</label>
-                                <input type="text" name="pincode" class="form-control custom-input" id="zip"
-                                    required value="{{ old('pincode') }}">
+                                <input type="text" id="billPinCode" name="pincode" class="form-control custom-input"
+                                    id="zip" required value="{{ old('pincode') }}">
                             </div>
 
                             <div class="col-12">
@@ -187,14 +188,14 @@
                             <div class="payment-methods mb-4">
                                 <div class="form-check mb-2">
                                     <input class="form-check-input custom-radio" type="radio" name="paymentMethod"
-                                        id="upi" checked>
+                                        id="upi" value="upi" checked>
                                     <label class="form-check-label " for="upi">
                                         UPI / Credit Card / Netbanking
                                     </label>
                                 </div>
                                 <div class="form-check">
                                     <input class="form-check-input custom-radio" type="radio" name="paymentMethod"
-                                        id="cod">
+                                        id="cod" value="cash">
                                     <label class="form-check-label " for="cod">
                                         Cash on Delivery
                                     </label>
@@ -244,42 +245,67 @@
 @endsection
 
 @section('scripts')
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
     <script>
-        function checkcustomer() {
+        $(document).ready(function() {
 
-            var phone = $('#billPhone').val();
-            var url = "{{ route('front.get_userdata') }}";
 
-            if (phone.length == 10) {
-                $.ajax({
-                    url: url,
-                    type: 'GET',
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    },
-                    data: {
-                        phone: phone,
-                    },
-                    success: function(data) {
-                        console.log(data);
+            $('#billPhone').on('input', function() {
 
-                        $('#billFirstName').val(data.firstname);
-                        $('#billLastName').val(data.lastname);
-                        $('#billEmail').val(data.customeremail);
-                        $('#billStreetAddress1').val(data.address);
-                        $('#billStreetAddress2').val(data.address1);
-                        $('#billState').val(data.state);
 
-                        $('#shipping_city').val(data.city);
-                        // $('#strCountry').val(obj.country);
-                        $('#billPinCode').val(data.pincode);
+                let phone = $(this).val();
+
+
+                if (phone.length === 10) {
+                    checkcustomer(phone);
+                } else {
+                    clearCustomerFields();
+                }
+            });
+
+        });
+
+        function checkcustomer(phone) {
+
+            $.ajax({
+                url: "{{ route('front.get_userdata') }}",
+                type: 'GET',
+                data: {
+                    phone: phone
+                },
+                success: function(data) {
+                    console.log(data);
+                    if (data && data.customerid) {
+                        $('#billFirstName').val(data.firstname ?? '');
+                        $('#billLastName').val(data.lastname ?? '');
+                        $('#billEmail').val(data.customeremail ?? '');
+                        $('#billStreetAddress1').val(data.address ?? '');
+                        $('#billStreetAddress2').val(data.address1 ?? '');
+                        $('#billState').val(data.state ?? '');
+                        $('#shipping_city').val(data.city ?? '');
+                        $('#billPinCode').val(data.pincode ?? '');
+                    } else {
+                        clearCustomerFields();
                     }
-                });
-            }
+                }
+            });
+        }
+
+        function clearCustomerFields() {
+            $('#billFirstName').val('');
+            $('#billLastName').val('');
+            $('#billEmail').val('');
+            $('#billStreetAddress1').val('');
+            $('#billStreetAddress2').val('');
+            $('#billState').val('');
+            $('#shipping_city').val('');
+            $('#billPinCode').val('');
         }
     </script>
+
+
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -302,6 +328,13 @@
         }
 
         $('#checkout-form').submit(function(e) {
+
+            let paymentMethod = $('input[name="paymentMethod"]:checked').val();
+
+            // 🟢 CASH → normal form submit
+            if (paymentMethod === 'cash') {
+                return true; // allow normal submit
+            }
 
             e.preventDefault();
             showLoader();
