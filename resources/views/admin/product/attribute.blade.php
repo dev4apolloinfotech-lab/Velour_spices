@@ -108,20 +108,17 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <span style="color:red;">*</span>Product USD Price
-                                        <input type="text" class="form-control" name="product_attribute_usd_price"
-                                            inputmode="decimal"
-                                            oninput="this.value = this.value
-                                                .replace(/[^0-9.]/g,'')        // allow digits & dot
-                                                .replace(/(\..*?)\..*/g,'$1')  // keep only the first dot
-                                                .replace(/^(\.)/,'0.')         // '.5' -> '0.5'
-                                              "
-                                            placeholder="Enter Product USD Price" maxlength="100" autocomplete="off"
+                                        <span style="color:red;">*</span>Product Cut Price
+                                        <input type="text" class="form-control" name="product_cut_attribute_price"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                                            placeholder="Enter Product Cut Price" maxlength="100" autocomplete="off"
                                             required>
-                                        @error('product_attribute_usd_price')
+                                        @error('product_cut_attribute_price')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
+
+
 
                                     <!--<div class="mb-3">-->
                                     <!--    <span style="color:red;"></span>Attribute Photo-->
@@ -172,7 +169,7 @@
                                             <!--<th scope="col">Product Attribute Photo</th>-->
                                             <th scope="col"> Qty</th>
                                             <th scope="col"> Price</th>
-                                            <th scope="col">USD Price</th>
+                                            <th scope="col">Cut Price</th>
                                             <th scope="col">Action</th>
                                         </tr>
                                     </thead>
@@ -195,8 +192,7 @@
                                                 <!--</td>-->
                                                 <td>{{ $data->product_attribute_qty }}</td>
                                                 <td>{{ $data->product_attribute_price }}</td>
-                                                <td>{{ $data->product_attribute_usd_price }}</td>
-                                                {{--  <td>{{ $data->product_attribute_price }}</td>  --}}
+                                                <td>{{ $data->product_cut_attribute_price }}</td>
                                                 <td>
                                                     <div class=" gap-2">
                                                         <a class="mx-1" title="Edit" href="#"
@@ -287,21 +283,17 @@
                                     </div>
 
                                     <div class="mb-3">
-                                        <span style="color:red;">*</span>Product USD Price
-                                        <input type="text" class="form-control" name="product_attribute_usd_price"
-                                            id="Editproduct_attribute_usd_price" inputmode="decimal"
-                                            oninput="this.value = this.value
-                                                .replace(/[^0-9.]/g,'')        // allow digits & dot
-                                                .replace(/(\..*?)\..*/g,'$1')  // keep only the first dot
-                                                .replace(/^(\.)/,'0.')         // '.5' -> '0.5'
-                                              "
-                                            placeholder="Enter Product USD Price" maxlength="100" autocomplete="off"
+                                        <span style="color:red;">*</span>Product Cut Price
+                                        <input type="text" class="form-control" name="product_cut_attribute_price"
+                                            id="Editproduct_cut_attribute_price"
+                                            oninput="this.value = this.value.replace(/[^0-9]/g, '').replace(/(\..*?)\..*/g, '$1');"
+                                            placeholder="Enter Product Cut Price" maxlength="100" autocomplete="off"
                                             required>
-
-                                        @error('product_attribute_usd_price')
+                                        @error('product_cut_attribute_price')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                     </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <div class="hstack gap-2 justify-content-end">
@@ -463,7 +455,7 @@
                         $("#Editproduct_attribute_qty").val(obj.product_attribute_qty);
                         $("#Editproduct_attribute_price").val(obj.product_attribute_price);
                         $("#Editproduct_attribute_size").val(obj.product_attribute_size);
-                        $("#Editproduct_attribute_usd_price").val(obj.product_attribute_usd_price);
+                        $("#Editproduct_cut_attribute_price").val(obj.product_cut_attribute_price);
                         $('#attributeid').val(id);
                     }
                 });

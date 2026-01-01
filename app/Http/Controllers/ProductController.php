@@ -62,18 +62,11 @@ class ProductController extends Controller
                 // OPTIONAL numeric fields
 
                 'cut_price'       => 'nullable|numeric',
-                'usd_rate'        => 'nullable|numeric',
-                'usd_cut_price'   => 'nullable|numeric',
                 'height'          => 'nullable|numeric',
                 'width'           => 'nullable|numeric',
                 'breath'          => 'nullable|numeric',
                 'weight'          => 'nullable|numeric',
             ]);
-
-            $isBestSeller = $request->isBestSeller == "on" ? 1 : 0;
-            $isNewArrival = $request->isNewArrival == "on" ? 1 : 0;
-            $isGiftBoxes = $request->isGiftBoxes == "on" ? 1 : 0;
-            $isComboPacks = $request->isComboPacks == "on" ? 1 : 0;
 
             $Data = array(
                 'categoryId' => $request->categoryId ?? 0,
@@ -81,13 +74,7 @@ class ProductController extends Controller
                 'slugname' => Str::slug($request->productname),
                 'rate' => $request->rate,
                 'cut_price' => $request->cut_price ?? null,
-                'usd_rate' => $request->usd_rate ?? null,
-                'usd_cut_price' => $request->usd_cut_price ?? null,
                 'description' => $request->description ?? null,
-                'isBestSeller' => $isBestSeller ?? 0,
-                'isNewArrival' => $isNewArrival ?? 0,
-                'isGiftBoxes' => $isGiftBoxes ?? 0,
-                'isComboPacks' => $isComboPacks ?? 0,
                 'height' => $request->height ?? null,
                 'width' => $request->width ?? null,
                 'breath' => $request->breath ?? null,
@@ -158,17 +145,11 @@ class ProductController extends Controller
             // Optional numeric fields
 
             'cut_price'      => 'nullable|numeric',
-            'usd_rate'       => 'nullable|numeric',
-            'usd_cut_price'  => 'nullable|numeric',
             'height'         => 'nullable|numeric',
             'width'          => 'nullable|numeric',
             'breath'         => 'nullable|numeric',
             'weight'         => 'nullable|numeric',
         ]);
-        $isBestSeller = $request->isBestSeller == "on" ? 1 : 0;
-        $isNewArrival = $request->isNewArrival == "on" ? 1 : 0;
-        $isGiftBoxes = $request->isGiftBoxes == "on" ? 1 : 0;
-        $isComboPacks = $request->isComboPacks == "on" ? 1 : 0;
 
         Product::where(['isDelete' => 0, 'id' => $id])
             ->update([
@@ -177,13 +158,7 @@ class ProductController extends Controller
                 'slugname' => Str::slug($request->productname),
                 'rate' => $request->rate,
                 'cut_price' => $request->cut_price ?? null,
-                'usd_rate' => $request->usd_rate ?? null,
-                'usd_cut_price' => $request->usd_cut_price ?? null,
                 'description' => $request->description,
-                'isBestSeller' => $isBestSeller ?? 0,
-                'isNewArrival' => $isNewArrival ?? 0,
-                'isGiftBoxes' => $isGiftBoxes ?? 0,
-                'isComboPacks' => $isComboPacks ?? 0,
                 'height' => $request->height ?? 0,
                 'length' => $request->width ?? 0,
                 'breadth' => $request->breath ?? 0,

@@ -40,21 +40,65 @@ class FrontController extends Controller
 
     public function index(Request $request)
     {
-        // try {
+        try {
 
-        $offers = Offer::orderBy('id', 'desc')
-            ->take(1)
-            ->where(['iStatus' => 1, 'isDelete' => 0])
-            ->get();
+            $offers = Offer::orderBy('id', 'desc')
+                ->take(1)
+                ->where(['iStatus' => 1, 'isDelete' => 0])
+                ->get();
 
-        $Testimonial = Testimonial::orderby('name', 'asc')->get();
-        $Category = Category::with(['products' => function ($q) {
-            $q->select(
-                'products.*',
-                DB::raw('(SELECT strphoto FROM productphotos
+            $Testimonial = Testimonial::orderby('name', 'asc')->get();
+            $Category = Category::with(['products' => function ($q) {
+                $q->select(
+                    'products.*',
+                    DB::raw('(SELECT strphoto FROM productphotos
                   WHERE productphotos.productid = products.id
                   ORDER BY productphotos.productphotosid LIMIT 1) as photo'),
+                    DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
+                    DB::raw('(SELECT pa.id
+                FROM product_attributes pa
+                WHERE pa.product_id = products.id
+                ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS attribute_id'),
+
+                    DB::raw('(SELECT pa.product_attribute_qty
+                FROM product_attributes pa
+                WHERE pa.product_id = products.id
+                ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS product_attribute_qty'),
+
+                    DB::raw('(SELECT a.name
+                FROM attributes a
+                JOIN product_attributes pa2 ON pa2.product_attribute_id = a.id
+                WHERE pa2.product_id = products.id
+                ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS attribute_name'),
+
+                    DB::raw('(SELECT pa3.product_attribute_price
+                FROM product_attributes pa3
+                WHERE pa3.product_id = products.id
+                ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1) AS product_attribute_price'),
+
+                    DB::raw('(
+                    SELECT MIN(pa3.product_cut_attribute_price)
+                    FROM product_attributes pa3
+                    WHERE pa3.product_id = products.id
+                ) AS product_cut_attribute_price')
+                );
+            }])->get();
+
+            $blogs = Blog::orderBy('blogId', 'desc')
+                ->where(['iStatus' => 1, 'isDelete' => 0])->take(3)->get();
+
+
+            $AllProducts = Product::select(
+                'products.*',
+                DB::raw('(SELECT strphoto FROM productphotos
+              WHERE productphotos.productid = products.id
+              ORDER BY productphotos.productphotosid LIMIT 1) as photo'),
                 DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
+
                 DB::raw('(SELECT pa.id
                 FROM product_attributes pa
                 WHERE pa.product_id = products.id
@@ -78,145 +122,30 @@ class FrontController extends Controller
                 FROM product_attributes pa3
                 WHERE pa3.product_id = products.id
                 ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
-                LIMIT 1) AS product_attribute_price')
-            );
-        }])->get();
+                LIMIT 1) AS product_attribute_price'),
 
-        $blogs = Blog::orderBy('blogId', 'desc')
-            ->where(['iStatus' => 1, 'isDelete' => 0])->take(3)->get();
+                DB::raw('(
+                    SELECT MIN(pa3.product_cut_attribute_price)
+                    FROM product_attributes pa3
+                    WHERE pa3.product_id = products.id
+                ) AS product_cut_attribute_price')
 
-
-        $AllProducts = Product::select(
-            'products.*',
-            DB::raw('(SELECT strphoto FROM productphotos
-              WHERE productphotos.productid = products.id
-              ORDER BY productphotos.productphotosid LIMIT 1) as photo'),
-            DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
-
-            DB::raw('(SELECT pa.id
-                FROM product_attributes pa
-                WHERE pa.product_id = products.id
-                ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
-                LIMIT 1) AS attribute_id'),
-
-            DB::raw('(SELECT pa.product_attribute_qty
-                FROM product_attributes pa
-                WHERE pa.product_id = products.id
-                ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
-                LIMIT 1) AS product_attribute_qty'),
-
-            DB::raw('(SELECT a.name
-                FROM attributes a
-                JOIN product_attributes pa2 ON pa2.product_attribute_id = a.id
-                WHERE pa2.product_id = products.id
-                ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
-                LIMIT 1) AS attribute_name'),
-
-            DB::raw('(SELECT pa3.product_attribute_price
-                FROM product_attributes pa3
-                WHERE pa3.product_id = products.id
-                ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
-                LIMIT 1) AS product_attribute_price')
-        )
-            ->orderBy('id', 'desc')
-            ->take(8)
-            ->where(['products.iStatus' => 1, 'products.isDelete' => 0])
-            ->get();
+            )
+                ->orderBy('id', 'desc')
+                ->take(8)
+                ->where(['products.iStatus' => 1, 'products.isDelete' => 0])
+                ->get();
 
 
-        return view('frontview.index', compact('Category', 'AllProducts', 'blogs', 'Testimonial'));
-        // } catch (\Throwable $th) {
-        //     Log::error('Home Page Error: ' . $th->getMessage(), [
-        //         'exception' => $th
-        //     ]);
-        //     return redirect()->back()->withInput()->with('error', 'Failed to load homepage. Please try again.');
-        // }
+
+            return view('frontview.index', compact('Category', 'AllProducts', 'blogs', 'Testimonial'));
+        } catch (\Throwable $th) {
+            Log::error('Home Page Error: ' . $th->getMessage(), [
+                'exception' => $th
+            ]);
+            return redirect()->back()->withInput()->with('error', 'Failed to load homepage. Please try again.');
+        }
     }
-
-
-    // public function index(Request $request)
-    // {
-    //     // $currency = session('currency', 'USD');
-
-    //     // try {
-    //         $meta = MetaData::where('id', '=', '3')->first();
-
-    //         $Testimonial = Testimonial::orderBy('id', 'desc')
-    //             ->where(['iStatus' => 1, 'isDelete' => 0])
-    //             ->get();
-
-    //         $blogs = Blog::orderBy('blogId', 'desc')
-    //             ->where(['iStatus' => 1, 'isDelete' => 0])
-    //             ->take(3)
-    //             ->get();
-
-    //         $offers = Offer::orderBy('id', 'desc')
-    //             ->take(1)
-    //             ->where(['iStatus' => 1, 'isDelete' => 0])
-    //             ->get();
-
-    //         $ip = $request->ip();
-    //         $countryCode = $this->getCountryCode($ip);
-
-    //         $featuredProduct = Product::select(
-    //             'products.id',
-    //             'products.categoryId',
-    //             'products.productname',
-    //             'products.rate',
-    //             'products.usd_rate',
-    //             'products.cut_price',
-    //             'products.usd_cut_price',
-    //             'products.description',
-    //             'products.slugname',
-    //             // DB::raw('(SELECT strphoto FROM productphotos WHERE  productphotos.productid=products.id ORDER BY products.id  LIMIT 1) as photo'),
-    //             DB::raw('(SELECT categories.slugname FROM categories WHERE  categories.id=products.categoryId ORDER BY products.id  LIMIT 1) as category_slug'),
-
-    //             DB::raw('(SELECT strphoto FROM productphotos WHERE  productphotos.productid=products.id ORDER BY products.id LIMIT 1) as photo'),
-
-    //             // ✅ Select full product attribute details from the same lowest-price row
-    //             DB::raw('(SELECT pa.id
-    //             FROM product_attributes pa
-    //             WHERE pa.product_id = products.id
-    //             ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
-    //             LIMIT 1) AS attribute_id'),
-
-    //             DB::raw('(SELECT pa.product_attribute_qty
-    //             FROM product_attributes pa
-    //             WHERE pa.product_id = products.id
-    //             ORDER BY CAST(pa.product_attribute_price AS DECIMAL(10,2)) ASC
-    //             LIMIT 1) AS product_attribute_qty'),
-
-    //             DB::raw('(SELECT a.name
-    //             FROM attributes a
-    //             JOIN product_attributes pa2 ON pa2.product_attribute_id = a.id
-    //             WHERE pa2.product_id = products.id
-    //             ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
-    //             LIMIT 1) AS attribute_name'),
-
-    //             DB::raw('(SELECT pa3.product_attribute_price
-    //             FROM product_attributes pa3
-    //             WHERE pa3.product_id = products.id
-    //             ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
-    //             LIMIT 1) AS product_attribute_price')
-    //         )
-    //             ->orderBy('id', 'desc')
-    //             ->take(8)
-    //             ->where(['products.iStatus' => 1, 'products.isDelete' => 0])
-    //             ->get();
-    //         // dd($featuredProduct);
-
-    //         $category = Category::orderBy('id', 'desc')
-    //             ->where(['iStatus' => 1, 'isDelete' => 0, 'id' => 1])
-    //             ->first();
-
-    //         return view('frontview.index', compact('meta', 'Testimonial', 'blogs', 'featuredProduct', 'offers', 'countryCode', 'category'));
-    //     // } catch (\Throwable $th) {
-    //     //     Log::error('Home Page Error: ' . $th->getMessage(), [
-    //     //         'exception' => $th
-    //     //     ]);
-    //     //     return redirect()->back()->withInput()->with('error', 'Failed to load homepage. Please try again.');
-    //     // }
-    // }
 
     public function about(Request $request)
     {
@@ -310,6 +239,14 @@ class FrontController extends Controller
               ORDER BY CAST(pa2.product_attribute_price AS DECIMAL(10,2)) ASC
               LIMIT 1) AS attribute_name'),
 
+            DB::raw('(
+                SELECT pa3.product_cut_attribute_price
+                FROM product_attributes pa3
+                WHERE pa3.product_id = products.id
+                ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1
+            ) AS product_cut_attribute_price'),
+
             DB::raw('(SELECT pa3.product_attribute_price
               FROM product_attributes pa3
               WHERE pa3.product_id = products.id
@@ -373,18 +310,28 @@ class FrontController extends Controller
                         WHERE product_attributes.product_id = products.id
                     ) AS product_attribute_price'),
 
+            DB::raw('(
+                SELECT pa3.product_cut_attribute_price
+                FROM product_attributes pa3
+                WHERE pa3.product_id = products.id
+                ORDER BY CAST(pa3.product_attribute_price AS DECIMAL(10,2)) ASC
+                LIMIT 1
+            ) AS product_cut_attribute_price'),
+
             // ⬇ id of the cheapest attribute (ties broken by id)
             DB::raw('(
                         SELECT pa1.id
                         FROM product_attributes pa1
                         WHERE pa1.product_id = products.id
-                        ORDER BY CAST(pa1.product_attribute_price AS DECIMAL(10,2)) ASC, pa1.id ASC
+                        ORDER BY CAST(pa1.product_attribute_price AS DECIMAL(10,2)) ASC
                         LIMIT 1
                     ) AS min_attr_id')
         )
             ->orderBy('products.id', 'DESC')
             ->where(['products.iStatus' => 1, 'products.isDelete' => 0, 'products.slugname' => $product_id])
             ->first();
+
+
 
         $Photos = "";
         if ($ProductDetail) {
@@ -401,6 +348,7 @@ class FrontController extends Controller
             'product_attributes.product_attribute_qty',
             'product_attributes.product_attribute_weight',
             'product_attributes.product_attribute_price',
+            'product_attributes.product_cut_attribute_price',
             'attributes.name as attribute_name'
         )
             ->leftJoin('attributes', 'product_attributes.product_attribute_id', '=', 'attributes.id')
@@ -470,20 +418,18 @@ class FrontController extends Controller
             ]
         );
 
-
+        $SendEmailDetails = DB::table('sendemaildetails')->where(['id' => 4])->first();
         $data = array(
             'name' => $request->name,
             'email' => $request->email,
-            'subject' => $request->Topic,
+            'Topic' => $request->Topic,
+            'subject' => $SendEmailDetails->strSubject,
             'captcha' => $request->captcha,
             'message' => $request->message,
             "strIp" => $request->ip(),
             "created_at" => now()
         );
         Inquiry::create($data);
-
-        $SendEmailDetails = DB::table('sendemaildetails')->where(['id' => 4])->first();
-
 
         if ($SendEmailDetails) {
             $msg = [
@@ -531,6 +477,15 @@ class FrontController extends Controller
     public function refreshCaptcha()
     {
         return response()->json(['captcha' => captcha_img()]);
+    }
+
+    public function pageDetails($slug)
+    {
+        $page = OtherPages::where('slugname', $slug)
+            ->where('iStatus', 1)
+            ->where('isDelete', 0)
+            ->firstOrFail();
+        return view('frontview.otherpage', compact('page'));
     }
 
     public function couponcodeapply(Request $request)

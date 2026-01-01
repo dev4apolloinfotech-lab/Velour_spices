@@ -6,8 +6,8 @@ $server = $_SERVER['SERVER_NAME'];
 // Determine file path based on server
 if ($server === '127.0.0.1') {
     $filePath = $root . '/mailers/dispatchemail.html';
-} elseif ($server === 'www.getdemo.in') {
-    $filePath = $root . '/oro_veda/mailers/dispatchemail.html';
+} elseif ($server === 'getdemo.in') {
+    $filePath = $root . '/Velour_spices/mailers/dispatchemail.html';
 } else {
     $filePath = $root . '/mailers/dispatchemail.html';
 }

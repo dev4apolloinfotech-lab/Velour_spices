@@ -58,14 +58,11 @@
                     <h1 class="product-title display-5 mb-3">{{ $ProductDetail->productname ?? '' }}</h1>
 
                     <h3 class="product-price mb-4">
-                        ₹ <span id="productPrice">{{ $ProductDetail->rate }}</span>
-                        <span class="text-white fs-6 text-decoration-line-through ms-2">
-                            ₹ {{ $ProductDetail->cut_price }}
+                        ₹ <span id="productPrice">{{ $ProductDetail->product_attribute_price }}</span>
+                        <span id="productCutPrice" class="text-white fs-6 text-decoration-line-through ms-2">
+                            ₹ {{ $ProductDetail->product_cut_attribute_price }}
                         </span>
                     </h3>
-
-
-
 
                     @php
                         use App\Models\ProductAttributes;
@@ -83,6 +80,7 @@
                                 @foreach ($attributes as $attribute)
                                     <option value="{{ $attribute->id }}"
                                         data-price="{{ $attribute->product_attribute_price }}"
+                                        data-cutprice="{{ $attribute->product_cut_attribute_price }}"
                                         data-text="{{ $attribute->product_attribute_qty . ' ' . $attribute->attribute_name }}"
                                         {{ (int) $attribute->id === (int) $selectedAttrId ? 'selected' : '' }}>
                                         {{ $attribute->product_attribute_qty }} {{ $attribute->attribute_name }}
@@ -96,7 +94,9 @@
                         <div class="col-sm-6">
                             <label class="form-label small">Quantity</label>
                             <div class="input-group">
-                                <input type="number" class="form-control custom-input" value="1" min="1">
+                                <input type="number" class="form-control custom-input" id="product_quantity"
+                                    name="qty_display" value="1" min="1" step="1"
+                                    oninput="syncQuantity()">
                                 <form action="{{ route('cart.store') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                     <input type="hidden" name="productid" value="{{ $ProductDetail->id }}">
@@ -110,7 +110,7 @@
                                         value="{{ $ProductDetail->rate }}">
 
 
-                                    <input type="hidden" name="quantity" value="1">
+                                    <input type="hidden" name="quantity" id="cart_quantity" value="1">
                                     <button type="submit" class="btn btn-add-cart" data-tooltip="Add to Cart">
                                         Add to Cart
                                     </button>
@@ -165,14 +165,9 @@
                 <h4 class="text-gold mb-3 serif-font">About this Item</h4>
                 <div class="text-muted product-text-body">
                     <p>
-                        Our Kashmiri Red Chilli Powder is a staple in Indian cooking, renowned for its brilliant red
-                        color and mild pungency. Unlike ordinary chilli powders that focus on heat, this variety is
-                        curated to add a rich texture and a smoky flavor profile to your curries.
+                        {!! $ProductDetail->description ?? '' !!}
                     </p>
-                    <p>
-                        Sourced directly from the farms in Kashmir, the chillies are sun-dried to preserve their natural
-                        oils and then ground using temperature-controlled processes.
-                    </p>
+
                 </div>
             </div>
 
@@ -203,17 +198,42 @@
 @endsection
 
 @section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            syncQuantity();
+        });
+    </script>
+
+
+    <script>
+        function syncQuantity() {
+            let qty = document.getElementById('product_quantity').value;
+
+            qty = parseInt(qty);
+            if (isNaN(qty) || qty < 1) {
+                qty = 1;
+            }
+
+            document.getElementById('product_quantity').value = qty;
+            document.getElementById('cart_quantity').value = qty;
+        }
+    </script>
+
 
     <script>
         document.getElementById('attributeSelect').addEventListener('change', function() {
             let selected = this.options[this.selectedIndex];
 
             let price = selected.dataset.price;
+            let cutprice = selected.dataset.cutprice;
+
             let text = selected.dataset.text;
             let attrId = selected.value;
 
             // Update UI
             document.getElementById('productPrice').innerText = price;
+            document.getElementById('productCutPrice').innerText = cutprice;
+
 
             // Update cart fields
             document.getElementById('cart_attribute_id').value = attrId;
