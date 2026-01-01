@@ -14,6 +14,8 @@ class ProductAttributes extends Model
         'product_attribute_id',
         'product_attribute_qty',
         'product_attribute_weight',
-        'product_attribute_price'
+        'product_attribute_price',
+        'product_cut_attribute_price'
+
     ];
 }

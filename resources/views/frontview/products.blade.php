@@ -68,7 +68,7 @@
                                         <input type="hidden" name="attribute_id" value="{{ $pro->attribute_id }}">
                                         <input type="hidden" name="attribute_text"
                                             value="{{ $pro->product_attribute_qty . ' ' . $pro->attribute_name }}">
-                                        <input type="hidden" name="price" value="{{ $pro->rate }}">
+                                        <input type="hidden" name="price" value="{{ $pro->product_attribute_price }}">
                                         <input type="hidden" name="quantity" value="1">
                                         <button type="submit" class="icon-btn" data-tooltip="Add to Cart">
                                             <i class="fas fa-shopping-cart"></i>
@@ -84,7 +84,7 @@
                                 {{-- <span class="prod-cat">Powder</span> --}}
                                 <a href="{{ route('front.product_detail', [$pro->category_slug, $pro->slugname]) }}"
                                     class="prod-title">{{ $pro->productname ?? '' }}</a>
-                                <div class="prod-price">₹{{ $pro->rate ?? '' }}</div>
+                                <div class="prod-price">₹{{ $pro->product_attribute_price ?? '' }}</div>
                             </div>
                         </div>
                     </div>

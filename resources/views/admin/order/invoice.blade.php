@@ -14,14 +14,14 @@
     }
 
     th {
-        background-color: #2a7d3e !important;
+        background-color: #c5470b !important;
         /* Dark green */
         color: #fff !important;
     }
 
     .highlight,
     .totals-row {
-        background-color: #4caf50 !important;
+        background-color: #c5470b !important;
         /* Medium green */
         color: white !important;
         font-weight: bold;

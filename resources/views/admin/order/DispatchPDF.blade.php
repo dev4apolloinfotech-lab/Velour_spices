@@ -57,7 +57,7 @@
             <td></td>
 
             <td colspan="2" rowspan="18" style="text-align: right;">
-                +91 77779 24902
+                +91 63569 33345
             </td>
         </tr>
 

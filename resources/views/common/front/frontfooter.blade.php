@@ -74,15 +74,18 @@
 
         <div class="border-top border-secondary pt-4 mt-4 text-center small text-muted">
             <div class="row">
-                <div class="col-md-6 text-white text-md-start">
+                <div class="col-md-4 text-white text-md-start">
                     &copy; 2025 RedSpice Inc. All rights reserved.
                 </div>
-                <div class="col-md-6 text-md-end mt-2 mt-md-0 social-media">
-                    <a href="privacy-policy.html" class="text-decoration-none me-3">Privacy Policy</a>
-                    <a href="#" class="text-decoration-none me-3">Terms & Conditions</a>
-                    <a href="#" class="text-decoration-none me-3">Refund Policy</a>
-                    <a href="#" class="text-decoration-none">Cancellation Policy</a>
-                </div>
+                @if (!empty($footerPages) && $footerPages->count() > 0)
+
+                    <div class="col-md-8 text-md-end mt-2 mt-md-0 social-media">
+                        @foreach ($footerPages as $page)
+                            <a href="{{ route('footer.page', $page->slugname) }}"
+                                class="text-decoration-none me-3">{{ $page->pagename }}</a>
+                        @endforeach
+                    </div>
+                @endif
             </div>
         </div>
     </div>

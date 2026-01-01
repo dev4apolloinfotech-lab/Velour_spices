@@ -37,7 +37,7 @@ class ProductAttributeController extends Controller
             'product_attributes.product_attribute_size',
             'product_attributes.product_attribute_qty',
             'product_attributes.product_attribute_price',
-            'product_attributes.product_attribute_usd_price',
+            'product_attributes.product_cut_attribute_price',
             'product_attributes.product_attribute_price_without_gst',
             'product_attributes.product_attribute_photo',
             'attributes.name'
@@ -82,7 +82,7 @@ class ProductAttributeController extends Controller
             'product_attribute_size' => $request->product_attribute_size,
             'product_attribute_qty' => $request->product_attribute_qty,
             'product_attribute_price' => $request->product_attribute_price,
-            'product_attribute_usd_price' => $request->product_attribute_usd_price,
+            'product_cut_attribute_price' => $request->product_cut_attribute_price,
             'product_attribute_photo' => $img ?? null,
             'created_at' => date('Y-m-d H:i:s'),
         );
@@ -144,12 +144,13 @@ class ProductAttributeController extends Controller
 
     public function product_attribute_update(Request $request)
     {
+
         $update = DB::table('product_attributes')
             ->where(['id' => $request->attributeid])
             ->update([
                 'product_attribute_qty' => $request->product_attribute_qty,
                 'product_attribute_price' => $request->product_attribute_price,
-                'product_attribute_usd_price' => $request->product_attribute_usd_price,
+                'product_cut_attribute_price' => $request->product_cut_attribute_price,
                 'product_attribute_size' => $request->product_attribute_size,
                 'updated_at' => date('Y-m-d H:i:s')
             ]);

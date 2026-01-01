@@ -1752,9 +1752,9 @@ select.custom-input {
 
 .map-frame-wrapper {
     border: 1px solid #222;
-    border-radius: 0; 
+    border-radius: 0;
     overflow: hidden;
-    line-height: 0; 
+    line-height: 0;
 }
 
 /* THE DARK MODE MAP TRICK */

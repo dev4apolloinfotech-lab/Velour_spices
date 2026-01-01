@@ -319,8 +319,6 @@ Route::prefix('admin')->name('testimonial.')->middleware('auth')->group(function
 });
 
 
-
-
 //=======================================Front Start=============================================
 
 Route::any('/', [FrontController::class, 'index'])->name('front.index');
@@ -401,7 +399,7 @@ Route::get('No-Return/No-Exchange', [FrontController::class, 'noReturnNoExchange
 Route::get('/weight-bind', [FrontController::class, 'weightBind'])->name('productweight.weightBind');
 
 Route::get('/Page-Not-Available', [FrontController::class, 'ordernotavailable'])->name('ordernotavailable');
-
+Route::get('/page/{slug}', [FrontController::class, 'pageDetails'])->name('footer.page');
 
 Route::get('/Thank-You', [FrontController::class, 'contactthankyou'])->name('contactthankyou');
 //payment
