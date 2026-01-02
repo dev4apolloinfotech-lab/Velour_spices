@@ -182,6 +182,14 @@
                                             </div>
 
                                             <div class="col-lg-12 col-md-6">
+                                                <span style="color:red;"></span> Keyword
+                                                <textarea class="form-control ckeditor" name="Keyword" id="Keyword" rows="6"></textarea>
+                                                @error('Keyword')
+                                                    <span class="text-danger">{{ $message }}</span>
+                                                @enderror
+                                            </div>
+
+                                            <div class="col-lg-12 col-md-6">
                                                 <span style="color:red;"></span> Description
                                                 <textarea class="form-control ckeditor" name="description" id="description" rows="6"></textarea>
                                                 @error('description')

@@ -59,9 +59,16 @@
                     <h6 class="text-accent text-uppercase fw-bold mb-3 tracking-widest">Since Generations</h6>
                     <h2 class="serif-font text-white display-5 mb-4">Pure Spices from the <br><span class="text-red">Heart
                             of India</span></h2>
-                    <p class=" mb-4 lead">Velour Spices was founded on the principle of absolute purity. We
-                        believe that every meal deserves the authentic, vibrant aromas that only ethically sourced,
-                        hand-picked spices can provide.</p>
+                    <p class=" mb-4 lead">At Velour Spices, we believe great food begins with uncompromised ingredients.
+                        Each spice is thoughtfully selected from trusted growing regions and processed using modern,
+                        hygienic techniques to preserve its natural aroma, color, and potency.
+
+                        Our commitment goes beyond taste — we focus on consistency, traceability, and excellence at every
+                        stage, from sourcing to packaging. Whether enhancing everyday meals or elevating professional
+                        kitchens, Velour Spices delivers reliability that chefs and consumers trust.
+
+                        Driven by a passion for quality and a respect for tradition, we aim to redefine everyday cooking
+                        into a refined culinary experience — one spice at a time.</p>
 
                     <div class="row g-4 mt-2">
                         <div class="col-sm-6">

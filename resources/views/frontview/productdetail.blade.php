@@ -3,6 +3,18 @@
 @section('title', 'Product Detail')
 
 @section('content')
+    <style>
+        .benefits-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .benefits-list li::before {
+            content: "✔";
+            color: #c9a24d;
+            margin-right: 8px;
+        }
+    </style>
 
     @include('common.frontmodalalert')
 
@@ -125,27 +137,10 @@
 
                     <hr class="border-secondary my-4">
 
-                    <ul class="list-unstyled benefits-list">
-                        <li>
-                            <i class="fas fa-check text-gold me-3"></i>
-                            Naturally Vibrant Red (No Artificial Dyes)
-                        </li>
+                    <div class="benefits-list">
+                        {!! $ProductDetail->Keyword !!}
+                    </div>
 
-                        <li>
-                            <i class="fas fa-check text-gold me-3"></i>
-                            Made from Sun-Dried, Stem-less Chillies
-                        </li>
-
-                        <li>
-                            <i class="fas fa-check text-gold me-3"></i>
-                            Cold-Ground to Retain Essential Oils
-                        </li>
-
-                        <li>
-                            <i class="fas fa-check text-gold me-3"></i>
-                            Perfect Balance of Heat & Aroma
-                        </li>
-                    </ul>
                 </div>
             </div>
         </div>

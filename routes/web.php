@@ -418,4 +418,4 @@ Route::get('/products-list/{slugname?}', [FrontController::class, 'product_list'
 Route::get('/product/{category_id?}/{product_id?}', [FrontController::class, 'product_detail'])->name('front.product_detail');
 
 //cms pages
-Route::get('/page/{slugname?}', [FrontController::class, 'cms_pages'])->name('cms_pages');
+// Route::get('/page/{slugname?}', [FrontController::class, 'cms_pages'])->name('cms_pages');

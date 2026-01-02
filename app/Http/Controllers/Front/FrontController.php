@@ -24,6 +24,7 @@ use App\Models\Country;
 use App\Models\Inquiry;
 use App\Models\MetaData;
 use App\Models\Payment;
+use App\Models\Video;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -149,16 +150,16 @@ class FrontController extends Controller
 
     public function about(Request $request)
     {
-        // try {
-        $meta = MetaData::where('id', '=', '2')->first();
+        try {
+            $meta = MetaData::where('id', '=', '2')->first();
 
-        return view('frontview.about', compact('meta'));
-        // } catch (\Throwable $th) {
-        //     Log::error('About Page Error: ' . $th->getMessage(), [
-        //         'exception' => $th
-        //     ]);
-        //     return redirect()->back()->withInput()->with('error', 'Failed to load about page.');
-        // }
+            return view('frontview.about', compact('meta'));
+        } catch (\Throwable $th) {
+            Log::error('About Page Error: ' . $th->getMessage(), [
+                'exception' => $th
+            ]);
+            return redirect()->back()->withInput()->with('error', 'Failed to load about page.');
+        }
     }
 
     public function blog(Request $request)
@@ -284,9 +285,8 @@ class FrontController extends Controller
             'products.id',
             'products.productname',
             'products.rate',
-            'products.usd_rate',
+            'products.Keyword',
             'products.cut_price',
-            'products.usd_cut_price',
             'products.description',
             'products.categoryId',
             DB::raw('(SELECT strphoto FROM productphotos WHERE  productphotos.productid=products.id  LIMIT 1) as photo'),
@@ -388,8 +388,8 @@ class FrontController extends Controller
     {
         try {
             $meta = MetaData::where('id', '1')->first();
-
-            return view('frontview.recipe', compact('meta'));
+            $videos = Video::paginate();
+            return view('frontview.recipe', compact('meta', 'videos'));
         } catch (\Throwable $th) {
             Log::error('Contact Page Load Error: ' . $th->getMessage(), [
                 'exception' => $th
@@ -1187,17 +1187,7 @@ class FrontController extends Controller
         }
     }
 
-    public function cms_pages($slugname)
-    {
-        try {
-            $datas = OtherPages::where(['iStatus' => 1, 'isDelete' => 0, 'slugname' => $slugname])->first();
 
-            return view('frontview.cms_pages', compact('datas'));
-        } catch (\Throwable $th) {
-            Log::error('CMS Page Error: ' . $th->getMessage());
-            return redirect()->back()->with('error', 'Page not found or unavailable.');
-        }
-    }
 
     public function Frontlogout(Request $request)
     {
