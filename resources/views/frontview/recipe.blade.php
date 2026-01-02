@@ -42,102 +42,36 @@
     <section class="recipe-section py-5">
         <div class="container">
             <div class="row g-4">
-                <div class="col-lg-4 col-md-6 reveal">
-                    <div class="recipe-card p-2 rounded shadow-lg">
-                        <div class="ratio ratio-16x9 rounded overflow-hidden">
-                            <iframe src="https://www.youtube.com/embed/ynyB_10II_U?si=HZpD0OSP6si5gxa_" title="Recipe Video"
-                                allowfullscreen></iframe>
-                        </div>
-                        <div class="p-3">
-                            <p class="recipe-category mb-1">Traditional Masala</p>
-                            <h5 class="recipe-title">Authentic Garam Masala Blend</h5>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-4 col-md-6 reveal">
-                    <div class="recipe-card p-2 rounded shadow-lg">
-                        <div class="ratio ratio-16x9 rounded overflow-hidden">
-                            <iframe src="https://www.youtube.com/embed/yoW4kHHH4lQ?si=UTr-VkZZxwzIsyJW" title="Recipe Video"
-                                allowfullscreen></iframe>
-                        </div>
-                        <div class="p-3">
-                            <p class="recipe-category mb-1">Herbal Tea</p>
-                            <h5 class="recipe-title">Turmeric Root Wellness Latte</h5>
+                @forelse ($videos as $video)
+                    <div class="col-lg-4 col-md-6 reveal">
+                        <div class="recipe-card p-2 rounded shadow-lg">
+                            <div class="ratio ratio-16x9 rounded overflow-hidden">
+                                <iframe class="w-100 h-100" src="https://www.youtube.com/embed/{{ $video->url }}?rel=0"
+                                    title="Recipe Video"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen>
+                                </iframe>
+                            </div>
                         </div>
                     </div>
-                </div>
+                @empty
+                    <div class="col-12 text-center">
+                        <p>No recipes found.</p>
+                    </div>
+                @endforelse
 
-                <div class="col-lg-4 col-md-6 reveal">
-                    <div class="recipe-card p-2 rounded shadow-lg">
-                        <div class="ratio ratio-16x9 rounded overflow-hidden">
-                            <iframe src="https://www.youtube.com/embed/vvPlbtXM1es?si=0s_GDLz0Brtvj1l0" title="Recipe Video"
-                                allowfullscreen></iframe>
-                        </div>
-                        <div class="p-3">
-                            <p class="recipe-category mb-1">Main Course</p>
-                            <h5 class="recipe-title">Kashmiri Rogan Josh Curry</h5>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="col-lg-4 col-md-6 reveal">
-                    <div class="recipe-card p-2 rounded shadow-lg">
-                        <div class="ratio ratio-16x9 rounded overflow-hidden">
-                            <iframe src="https://www.youtube.com/embed/ynyB_10II_U?si=HZpD0OSP6si5gxa_" title="Recipe Video"
-                                allowfullscreen></iframe>
-                        </div>
-                        <div class="p-3">
-                            <p class="recipe-category mb-1">Traditional Masala</p>
-                            <h5 class="recipe-title">Authentic Garam Masala Blend</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 reveal">
-                    <div class="recipe-card p-2 rounded shadow-lg">
-                        <div class="ratio ratio-16x9 rounded overflow-hidden">
-                            <iframe src="https://www.youtube.com/embed/yoW4kHHH4lQ?si=UTr-VkZZxwzIsyJW" title="Recipe Video"
-                                allowfullscreen></iframe>
-                        </div>
-                        <div class="p-3">
-                            <p class="recipe-category mb-1">Herbal Tea</p>
-                            <h5 class="recipe-title">Turmeric Root Wellness Latte</h5>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-lg-4 col-md-6 reveal">
-                    <div class="recipe-card p-2 rounded shadow-lg">
-                        <div class="ratio ratio-16x9 rounded overflow-hidden">
-                            <iframe src="https://www.youtube.com/embed/vvPlbtXM1es?si=0s_GDLz0Brtvj1l0" title="Recipe Video"
-                                allowfullscreen></iframe>
-                        </div>
-                        <div class="p-3">
-                            <p class="recipe-category mb-1">Main Course</p>
-                            <h5 class="recipe-title">Kashmiri Rogan Josh Curry</h5>
-                        </div>
-                    </div>
-                </div>
             </div>
 
-            <div class="row mt-5">
-                <div class="col-12 text-center">
-                    <nav aria-label="Recipe pagination">
-                        <ul class="pagination justify-content-center custom-pagination">
-                            <li class="page-item disabled">
-                                <a class="page-link" href="#" tabindex="-1"><i class="fas fa-chevron-left"></i></a>
-                            </li>
-                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item">
-                                <a class="page-link" href="#"><i class="fas fa-chevron-right"></i></a>
-                            </li>
-                        </ul>
-                    </nav>
+            @if ($videos->hasPages())
+                <div class="row mt-5">
+                    <div class="col-12 text-center">
+                        {{ $videos->links('pagination::bootstrap-5') }}
+                    </div>
                 </div>
-            </div>
+            @endif
+
         </div>
     </section>
 

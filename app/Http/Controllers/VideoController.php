@@ -23,11 +23,11 @@ class VideoController extends Controller
             return back()->with('error', 'Error fetching videos. Please try again.');
         }
     }
-    
+
     public function edit(Request $request)
     {
         try {
-            $id = $request->id; 
+            $id = $request->id;
             $data = Video::where('isDelete', 0)->findOrFail($id);
 
             echo json_encode($data);
@@ -37,29 +37,41 @@ class VideoController extends Controller
         }
     }
 
+    private function getYoutubeId($url)
+    {
+        preg_match(
+            '%(?:youtube(?:-nocookie)?\.com/(?:[^/]+/.+/|(?:v|e(?:mbed)?)/|.*[?&]v=)|youtu\.be/)([^"&?/ ]{11})%i',
+            $url,
+            $matches
+        );
+
+        return $matches[1] ?? null;
+    }
+
     public function update(Request $request)
     {
         try {
             $request->validate([
                 'url' => 'required',
             ]);
-            
+            $videoId = $this->getYoutubeId($request->url);
+
+            if (!$videoId) {
+                return back()->with('error', 'Invalid YouTube URL');
+            }
             $video =  Video::where('isDelete', 0)->findOrFail($request->id);
-            
+
             $video->update([
-                'url' => $request->url,
+                'url' => $videoId,
                 'updated_at' => now(),
                 'strIP' => $request->ip()
             ]);
             return back()->with('success', 'Video Uploaded Successfully.');
-            
         } catch (\Exception $e) {
             // Log the exception
             Log::error('Error uploading video: ' . $e->getMessage());
             // Optionally, handle the exception gracefully with a custom message
             return back()->with('error', 'Error uploading video. Please try again.');
         }
-        
     }
-
 }

@@ -15,6 +15,7 @@ class Product extends Model
         'slugname',
         'description',
         'rate',
+        'Keyword',
         'cut_price',
         'usd_rate',
         'usd_cut_price',
