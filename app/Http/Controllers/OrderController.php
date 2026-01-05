@@ -10,6 +10,7 @@ use App\Models\Order;
 use App\Models\OrderDetail;
 use App\Models\Shipping;
 use App\Models\Customer;
+use App\Models\Ledger;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -405,11 +406,10 @@ class OrderController extends Controller
                 ->when($request->mobile, fn($query, $Mobile) => $query
                     ->where('order.shipping_mobile', 'like', '%' . $Mobile . '%'))
                 ->when($request->strName, fn($query, $Name) => $query
-                    ->where('order.shipping_cutomerName', 'like', '%' . $Name . '%'))
-                ->join('state', 'order.shiiping_state', '=', 'state.stateId');
+                    ->where('order.shipping_cutomerName', 'like', '%' . $Name . '%'));
+            //->join('state', 'order.shiiping_state', '=', 'state.stateId');
 
             $Pending = $Pend->paginate(15);
-
 
             return view('admin.order.paymentPendingOrder', compact('Pending', 'FromDate', 'ToDate', 'Courier', 'Name', 'Mobile'));
         }

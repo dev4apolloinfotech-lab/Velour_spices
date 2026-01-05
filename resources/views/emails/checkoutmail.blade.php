@@ -53,10 +53,10 @@
                     <td><strong>State:</strong></td>
                     <td>{{ $Order->shiiping_state ?? 'N/A' }}</td>
                 </tr>
-                <tr>
+                {{-- <tr>
                     <td><strong>Country:</strong></td>
                     <td>{{ $CountryName ?? 'N/A' }}</td>
-                </tr>
+                </tr> --}}
                 <tr>
                     <td><strong>Pincode:</strong></td>
                     <td>{{ $Order->shipping_pincode }}</td>
